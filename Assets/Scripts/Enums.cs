@@ -3,7 +3,8 @@ public enum BattleState
 {
     Running,
     Turn,
-    Pause
+    Pause,
+    StartFight
 }
 
 // Character state
@@ -31,6 +32,7 @@ public enum GameState
 // Animation Triggers
 public enum AnimationTrigger
 {
+    None,
     Attack,
     TakeDamage
 }

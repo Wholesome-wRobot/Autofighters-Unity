@@ -2,27 +2,23 @@
 
 public class Button : MonoBehaviour
 {
-    public void Start()
-    {
-    }
-
 	public void ToggleRun()
     {
-        if (BattleController.Instance.battleState == BattleState.Running)
-            BattleController.Instance.battleState = BattleState.Pause;
-        else
-            BattleController.Instance.battleState = BattleState.Running;
+        if (BattleController.Instance.BattleState == BattleState.Running)
+            BattleController.Instance.SetBattleState(BattleState.Pause);
+        else if (BattleController.Instance.BattleState == BattleState.Pause || BattleController.Instance.BattleState == BattleState.StartFight)
+            BattleController.Instance.SetBattleState(BattleState.Running);
     }
 
     public void SaveAll()
     {
         // Save Main controller
         MainControllerData dataMainC = new MainControllerData(MainController.Instance);
-        SaveSystem.SaveController(dataMainC, Consts.mainControllerName);
+        SaveSystem.SaveController(dataMainC, Consts.MainControllerName);
 
         // Save Battle controller
         BattleControllerData dataBattleC = new BattleControllerData(BattleController.Instance);
-        SaveSystem.SaveController(dataBattleC, Consts.battleControllerName);
+        SaveSystem.SaveController(dataBattleC, Consts.BattleControllerName);
 
         // Save characters
         SaveSystem.SaveCharacters();
@@ -31,32 +27,32 @@ public class Button : MonoBehaviour
     public void LoadAll()
     {
         // Load Main Controller
-        MainControllerData mainControllerData = (MainControllerData)SaveSystem.LoadController(Consts.mainControllerName);
-        MainController.Instance.listCharacters = SaveSystem.LoadCharacters();
-        MainController.Instance.gameState = mainControllerData.gameState;
-        MainController.Instance.uniqueId = mainControllerData.uniqueId;
+        MainControllerData mainControllerData = (MainControllerData)SaveSystem.LoadController(Consts.MainControllerName);
+        MainController.Instance.SetCharactersList(SaveSystem.LoadCharacters());
+        MainController.Instance.SetGameState(mainControllerData.gameState);
+        MainController.Instance.SetCurrentAvailableUniqueId(mainControllerData.uniqueId);
 
         // Load Battle Controller
-        BattleControllerData battleControllerData = (BattleControllerData)SaveSystem.LoadController(Consts.battleControllerName);
-        BattleController.Instance.battleState = battleControllerData.battleState;
-        BattleController.Instance.currentFrame = battleControllerData.currentFrame; 
+        BattleControllerData battleControllerData = (BattleControllerData)SaveSystem.LoadController(Consts.BattleControllerName);
+        BattleController.Instance.SetBattleState(battleControllerData.battleState);
+        BattleController.Instance.SetCurrentFrame(battleControllerData.currentFrame); 
     }
 
     public void CreateChar(int factionId)
     {
         CharacterStats newCharStats = new CharacterStats
         {
-            faction = (Faction)factionId,
-            uniqueId = MainController.Instance.GenerateUniqueID()
+            Faction = (Faction)factionId,
+            UniqueId = MainController.Instance.GenerateUniqueID()
         };
-        newCharStats.name = $"{newCharStats.faction} ({newCharStats.uniqueId})";
-        MainController.Instance.listCharacters.Add(newCharStats);
+        newCharStats.DisplayName = $"{newCharStats.Faction} ({newCharStats.UniqueId})";
+        MainController.Instance.AddCharacterToList(newCharStats);
     }
 
     public void StartGame()
     {
         Debug.Log("Starting Game");
-        MainController.Instance.LoadScene(Consts.battleSceneName);
-        MainController.Instance.gameState = GameState.Battle;
+        MainController.Instance.LoadScene(Consts.BattleSceneName);
+        MainController.Instance.SetGameState(GameState.Battle);
     }
 }

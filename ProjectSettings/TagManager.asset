@@ -3,9 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - CharacterSpot
-  - FrameText
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -40,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: FloatingText
+    uniqueID: 3680779703
+    locked: 0
+  - name: Character
+    uniqueID: 2249136367
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

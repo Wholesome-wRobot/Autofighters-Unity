@@ -1,20 +1,17 @@
 ﻿using System.Collections;
-using UnityEngine;
 
 public class EndTurnState : CharacterState
 {
-    public EndTurnState(CharacterStateMachine stateMachine) : base(stateMachine)
-    {
-        DisplayName = "Ending turn";
-    }
+    public override string DisplayName => "Ending turn";
+
+    public EndTurnState(CharacterStateMachine stateMachine) : base (stateMachine) { }
 
     public override IEnumerator Run()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return _stateMachine.StateTransitionTime;
 
-        characterStateMachine.character.stats.currentEnergy = 0;
-        characterStateMachine.ResetStateMachine();
-
-        BattleController.Instance.battleState = BattleState.Running;
+        _stateMachine.Character.Stats.CurrentEnergy = 0;
+        _stateMachine.ResetStateMachine();
+        BattleController.Instance.SetBattleState(BattleState.Running);
     }
 }

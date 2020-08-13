@@ -58,18 +58,18 @@ public static class SaveSystem
             File.Delete(charFile);
 
         // if list characters empty
-        if (MainController.Instance.listCharacters.Count <= 0)
+        if (MainController.Instance.GetListAllCharacters().Count <= 0)
         {
             Debug.Log("No character to save");
             return;
         }
 
         // Save all char files
-        foreach (CharacterStats characterStats in MainController.Instance.listCharacters)
+        foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
         {
             // Save them into a unique file
-            string destination = $"{charFolder}/{characterStats.name}.dat";
-            Debug.Log($"Saving character {characterStats.name} stats to {destination}");
+            string destination = $"{charFolder}/{characterStats.DisplayName}.dat";
+            Debug.Log($"Saving character {characterStats.DisplayName} stats to {destination}");
             FileStream file;
 
             if (File.Exists(destination)) file = File.OpenWrite(destination);
@@ -85,8 +85,8 @@ public static class SaveSystem
     {
         List<CharacterStats> resultList = new List<CharacterStats>();
 
-        // Clear controller list
-        MainController.Instance.listCharacters.Clear();
+        // Clear list of characters in current controller
+        MainController.Instance.ClearCharacterList();
 
         // Loop Load all characters from char files
         foreach (string charFile in Directory.GetFiles(Application.persistentDataPath + "/char"))

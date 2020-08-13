@@ -1,35 +1,32 @@
 ﻿using System.Collections;
-using UnityEngine;
 
 public class SelectSpellState : CharacterState
 {
-    public SelectSpellState(CharacterStateMachine stateMachine) : base(stateMachine)
-    {
-        DisplayName = "Selecting spell";
-    }
+    public override string DisplayName => "Selecting spell";
+
+    public SelectSpellState(CharacterStateMachine stateMachine) : base (stateMachine) { }
 
     public override IEnumerator Run()
     {
         // Loop in character's spell slots
-        foreach (SpellID spellName in characterStateMachine.character.stats.spellSlots)
+        foreach (SpellID spellName in _stateMachine.Character.Stats.SpellSlots)
         {
             if (spellName != SpellID.None)
             {
-                characterStateMachine.selectedSpell = SpellsDB.GetSpellById(spellName);
+                _stateMachine.SetSelectedSpell(SpellsDB.Get(spellName));
                 break;
             }
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return _stateMachine.StateTransitionTime;
 
-        if (characterStateMachine.selectedSpell != null)
-        {
-            Debug.Log($"{characterStateMachine.character.stats.name} selected {characterStateMachine.selectedSpell.DisplayName}");
-            characterStateMachine.SetCharacterState(new SelectTargetsState(characterStateMachine));
-        }
+        // Return spell or pass turn
+        if (_stateMachine.SelectedSpell != null)
+            _stateMachine.SetCharacterState(new SelectTargetsState(_stateMachine));
         else
         {
-            characterStateMachine.SetCharacterState(new EndTurnState(characterStateMachine));
+            _stateMachine.Character.SpawnFloatingText("NO SPELL", FloatingTextType.Neutral);
+            _stateMachine.SetCharacterState(new EndTurnState(_stateMachine));
         }
     }
 }

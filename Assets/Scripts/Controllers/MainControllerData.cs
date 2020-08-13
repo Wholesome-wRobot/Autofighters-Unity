@@ -6,7 +6,7 @@ public class MainControllerData
 
     public MainControllerData(MainController mainController)
     {
-        gameState = mainController.gameState;
-        uniqueId = mainController.uniqueId;
+        gameState = mainController.GameState;
+        uniqueId = mainController.CurrentAvailableUniqueId;
     }
 }

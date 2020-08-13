@@ -1,18 +1,12 @@
-﻿using System.Collections.Generic;
-
-public interface Spell
+﻿public abstract class Spell
 {    
-    public SpellID Id { get; set; }
-    public string DisplayName { get; set; }
-    public int Damage { get; set; }
-    public int Heal { get; set; }
-    public TargetFaction DefaultTargetFaction { get; set; }
+    public abstract SpellID SpellID { get; }
+    public abstract string DisplayName { get; }
+    public abstract int Damage { get; }
+    public abstract int Heal { get; }
+    public abstract TargetFaction DefaultTargetFaction { get; }
+    public abstract int TargetAmount { get; }
+    public abstract AnimationTrigger CastAnimationTrigger { get; }
 
-    // Instantiateur
-    public Spell()
-    {
-        DefaultTargetFaction = TargetFaction.Any;
-    }
-
-    public abstract void Use(List<Character> listTargets, Character user);
+    public abstract bool ReadyForImpact(SpellInstance spellInstance);
 }

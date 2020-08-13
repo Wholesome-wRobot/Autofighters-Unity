@@ -1,37 +1,86 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class CharacterStats
 {
-    // General
-    public uint uniqueId;
-    public string name;
-    public Faction faction;
-    public Job job;
+    // -------------------- General --------------------
 
-    // Position
-    public float positionX;
-    public float positionY;
+    [SerializeField]
+    private uint _uniqueId;
+    public uint UniqueId { get { return _uniqueId; } set => _uniqueId = value; }
 
-    // Energy
-    public float currentEnergy = 0f;
-    public float maxEnergy = 200f;
-    public float energyRate = 0.3f;
+    [SerializeField]
+    private string _displayName;
+    public string DisplayName { get { return _displayName; } set => _displayName = value; }
 
-    // Health
-    public float maxHealth = 400f;
-    public float currentHealth = 400f;
+    [SerializeField]
+    private Faction _faction;
+    public Faction Faction { get { return _faction; } set => _faction = value; }
 
-    // Mana
-    public float currentMana = 150f;
-    public float maxMana = 200f;
+    [SerializeField]
+    private Job _job;
+    public Job Job { get { return _job; } set => _job = value; }
 
-    // Spells
-    public List<SpellID> spellSlots = new List<SpellID>
+    // -------------------- Energy --------------------
+
+    [SerializeField]
+    private float _currentEnergy;
+    public float CurrentEnergy { get { return _currentEnergy; } set => _currentEnergy = value; }
+
+    [SerializeField]
+    private float _maxEnergy;
+    public float MaxEnergy { get { return _maxEnergy; } set => _maxEnergy = value; }
+
+    [SerializeField]
+    private float _energyRate;
+    public float EnergyRate { get { return _energyRate; } set => _energyRate = value; }
+
+    // -------------------- Health --------------------
+
+    [SerializeField]
+    private float _maxHealth;
+    public float MaxHealth { get { return _maxHealth; } set => _maxHealth = value; }
+
+    [SerializeField]
+    private float _currentHealth;
+    public float CurrentHealth { get { return _currentHealth; } set => _currentHealth = value; }
+
+    // -------------------- Mana --------------------
+
+    [SerializeField]
+    private float _currentMana;
+    public float CurrentMana { get { return _currentMana; } set => _currentMana = value; }
+
+    [SerializeField]
+    private float _maxMana;
+    public float MaxMana { get { return _maxMana; } set => _maxMana = value; }
+
+    // -------------------- Spells --------------------
+
+    [SerializeField]
+    private List<SpellID> _spellSlots;
+    public List<SpellID> SpellSlots { get { return _spellSlots; } set => _spellSlots = value; }
+
+    public CharacterStats()
     {
-        SpellID.BasicAttack,
-        SpellID.None,
-        SpellID.None,
-        SpellID.None
-    };
+        _spellSlots = new List<SpellID>()
+        {
+            SpellID.BasicHeal,
+            SpellID.None,
+            SpellID.None,
+            SpellID.BasicAttack,
+        };
+
+        CurrentEnergy = 0;
+        MaxEnergy = 100;
+
+        MaxHealth = 400;
+        CurrentHealth = MaxHealth;
+
+        MaxMana = 200;
+        CurrentMana = 100;
+
+        EnergyRate = 0.1f;
+    }
 }

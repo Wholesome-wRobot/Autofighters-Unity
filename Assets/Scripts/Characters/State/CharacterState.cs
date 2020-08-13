@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 public abstract class CharacterState
 {
-    protected CharacterStateMachine characterStateMachine;
+    protected CharacterStateMachine _stateMachine;
 
-    public string DisplayName { get; set; }
+    public abstract string DisplayName { get; }
 
     public CharacterState(CharacterStateMachine stateMachine)
     {
-        characterStateMachine = stateMachine;
+        _stateMachine = stateMachine;
     }
 
     public virtual IEnumerator Run()

@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-
-public static class BasicAttack : Spell
+﻿public class BasicAttack : Spell
 {
-    public BasicAttack()
-    {
-        Id = SpellID.BasicAttack;
-        DisplayName = "Basic Attack";
-        Damage = 50;
-        DefaultTargetFaction = TargetFaction.Opposite;
-    }
+    public override string DisplayName => "Basic Attack";
+    public override SpellID SpellID => SpellID.BasicAttack;
+    public override int Damage => 50;
+    public override int Heal => 0;
+    public override TargetFaction DefaultTargetFaction => TargetFaction.Opposite;
+    public override int TargetAmount => 1;
+    public override AnimationTrigger CastAnimationTrigger => AnimationTrigger.Attack;
 
-    public override void Use(List<Character> listTargets, Character user)
+    public override bool ReadyForImpact(SpellInstance spellInstance)
     {
-
+        return true;
     }
 }

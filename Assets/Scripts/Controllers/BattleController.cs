@@ -1,14 +1,10 @@
-﻿using System.Collections;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BattleController : MonoBehaviour
 {
-    public TextMeshProUGUI frameText;
-
     public static BattleController CN { get; private set; }
-    public int currentFrame = 0;
-    public BattleState battleState;
+    public int CurrentFrame { get; private set; }
+    public BattleState BattleState { get; private set; }
 
     public static BattleController Instance
     {
@@ -20,7 +16,7 @@ public class BattleController : MonoBehaviour
 
                 if (CN == null)
                 {
-                    GameObject container = new GameObject(Consts.battleControllerName);
+                    GameObject container = new GameObject(Consts.BattleControllerName);
                     CN = container.AddComponent<BattleController>();
                 }
             }
@@ -31,13 +27,17 @@ public class BattleController : MonoBehaviour
 
     public void Start()
     {
-        battleState = BattleState.Running;
+        SetCurrentFrame(0);
+        SetBattleState(BattleState.StartFight);
     }
+
+    public void SetBattleState(BattleState battleState) { BattleState = battleState; }
+
+    public void SetCurrentFrame(int frame) { CurrentFrame = frame; }
 
     public void Update()
     {
-        currentFrame = battleState == BattleState.Running ? currentFrame + 1 : currentFrame;
-
-        frameText.SetText(currentFrame.ToString());
+        if (BattleState == BattleState.Running)
+            SetCurrentFrame(CurrentFrame + 1);
     }
 }

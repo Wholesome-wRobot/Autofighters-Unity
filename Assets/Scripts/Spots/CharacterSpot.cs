@@ -8,10 +8,16 @@ public class CharacterSpot : MonoBehaviour
 
     public bool IsOccupied { get { return occupiedBy != 0; } }
 
+    void Awake()
+    {
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        sr.sprite = null;
+    }
+
     public void AttachCharacter(CharacterStats characterStats)
     {
-        spotFaction = characterStats.faction;
-        occupiedBy = characterStats.uniqueId;
+        spotFaction = characterStats.Faction;
+        occupiedBy = characterStats.UniqueId;
     }
 
     public void DetachCharacter()

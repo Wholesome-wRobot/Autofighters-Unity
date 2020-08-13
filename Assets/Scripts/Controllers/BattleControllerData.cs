@@ -6,7 +6,7 @@ public class BattleControllerData
 
     public BattleControllerData(BattleController battleController)
     {
-        currentFrame = battleController.currentFrame;
-        battleState = battleController.battleState;
+        currentFrame = battleController.CurrentFrame;
+        battleState = battleController.BattleState;
     }
 }

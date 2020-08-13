@@ -1,20 +1,16 @@
 ﻿using System.Collections;
-using UnityEngine;
 
 public class StartTurnState : CharacterState
 {
-    public StartTurnState(CharacterStateMachine characterStateMachine) : base(characterStateMachine)
-    {
-        DisplayName = "Start Turn";
-    }
+    public override string DisplayName => "Start Turn";
+
+    public StartTurnState(CharacterStateMachine characterStateMachine) : base (characterStateMachine) { }
 
     public override IEnumerator Run()
     {
-        BattleController.Instance.battleState = BattleState.Turn;
-        Debug.Log($"Start acting : {characterStateMachine.character.stats.name}");
+        BattleController.Instance.SetBattleState(BattleState.Turn);
 
-        yield return new WaitForSeconds(0.5f);
-
-        characterStateMachine.SetCharacterState(new SelectSpellState(characterStateMachine));
+        yield return _stateMachine.StateTransitionTime;
+        _stateMachine.SetCharacterState(new SelectSpellState(_stateMachine));
     } 
 }

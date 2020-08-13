@@ -11,38 +11,43 @@ public class CharacterSpawn : MonoBehaviour
         // Create array of already instantiated characters
         Character[] charsAlreadyInstantiated = FindObjectsOfType<Character>();
 
-        foreach (CharacterStats characterStats in MainController.Instance.listCharacters)
+        foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
         {
             // Check for duplicate
-            if (charsAlreadyInstantiated.Any(c => c.stats.uniqueId == characterStats.uniqueId))
+            if (charsAlreadyInstantiated.Any(c => c.Stats.UniqueId == characterStats.UniqueId))
             {
-                Debug.LogError($"Character with unique id {characterStats.uniqueId} already exists. Can't spawn.");
+                Debug.LogError($"Character with unique id {characterStats.UniqueId} already exists. Can't spawn.");
                 continue;
             }
 
             // Find spot
-            GameObject firstSpotAvailable = GetFirstCharacterSpotAvailable(characterStats.faction);
+            CharacterSpot firstSpotAvailable = GetFirstCharacterSpotAvailable(characterStats.Faction);
             if (firstSpotAvailable == null)
             {
-                Debug.LogError($"Alert, no spot available for {characterStats.name}");
+                Debug.LogError($"Alert, no spot available for {characterStats.DisplayName}");
                 continue;
             }
 
-            Debug.Log($"Instantiating {characterStats.name}");
-            GameObject characterInstance = Instantiate(character, firstSpotAvailable.transform.position, Quaternion.identity);
-            characterInstance.GetComponent<Character>().stats = characterStats;
+            // Instantiate
+            Debug.Log($"Instantiating {characterStats.DisplayName}");
+            Character characterInstance = Instantiate(Resources.Load<Character>("Prefabs/Character"), firstSpotAvailable.transform.position, Quaternion.identity);
+
+            // Load stats into new character
+            characterInstance.GetComponent<Character>().LoadStats(characterStats);
+
+            // Attach character to spot
             firstSpotAvailable.GetComponent<CharacterSpot>().AttachCharacter(characterStats);
         }
     }
 
-    private GameObject GetFirstCharacterSpotAvailable(Faction faction)
+    private CharacterSpot GetFirstCharacterSpotAvailable(Faction faction)
     {
-        GameObject[] allSpots = GameObject.FindGameObjectsWithTag("CharacterSpot");
-        foreach (GameObject s in allSpots)
+        List<CharacterSpot> allSpots = FindObjectsOfType<CharacterSpot>().OrderBy(o => o.id).ToList();
+
+        foreach (CharacterSpot spot in allSpots)
         {
-            CharacterSpot spot = s.GetComponent<CharacterSpot>();
             if (spot.spotFaction == faction && !spot.IsOccupied)
-                return s;
+                return spot;
         }
         return null;
     }

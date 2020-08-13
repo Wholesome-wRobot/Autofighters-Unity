@@ -2,15 +2,15 @@
 
 class CharacterAnimationEvents : MonoBehaviour
 {
-    public Character character;
+    private Character _character;
 
     void Start()
     {
-        character = GetComponentInParent<Character>();
+        _character = GetComponentInParent<Character>();
     }
 
-    public void HitEvent(string msg)
+    public void HitEvent()
     {
-        character.characterStateMachine.TriggerSPellImpact();
+        _character.CharacterStateMachine.TriggerSpellInstanceCreation();
     }
 }

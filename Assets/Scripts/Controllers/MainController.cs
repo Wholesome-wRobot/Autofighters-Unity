@@ -5,22 +5,26 @@ using UnityEngine.SceneManagement;
 
 public class MainController : MonoBehaviour
 {
-    public List<CharacterStats> listCharacters = new List<CharacterStats>();
-    public GameState gameState;
-    public uint uniqueId;
+    [SerializeField]
+    private List<CharacterStats> _charactersList;
+    private int _maxNumberOfAllies = 4;
+
+    public GameState GameState { get; private set; }
+    public uint CurrentAvailableUniqueId { get; private set; }
 
     public static MainController CN { get; private set; }
+
     public static MainController Instance
     {
         get
-        {
+        { 
             if (CN == null)
             {
                 CN = FindObjectOfType<MainController>();
 
                 if (CN == null)
                 {
-                    GameObject container = new GameObject(Consts.mainControllerName);
+                    GameObject container = new GameObject(Consts.MainControllerName);
                     CN = container.AddComponent<MainController>();
                 }
             }
@@ -31,6 +35,8 @@ public class MainController : MonoBehaviour
 
     private void Awake()
     {
+        SpellsDB.Initialize();
+
         // Random seed
         Random.InitState((int)System.DateTime.Now.Ticks);
 
@@ -44,11 +50,42 @@ public class MainController : MonoBehaviour
     
     void Start() 
     {
-        gameState = GameState.MainMenu;
+        _charactersList = new List<CharacterStats>();
+        GameState = GameState.MainMenu;
     }
-    
-    void Update()
+
+    public void SetCurrentAvailableUniqueId(uint id) { CurrentAvailableUniqueId = id; }
+
+    public void SetGameState(GameState gameState) { GameState = GameState; }
+
+    public void SetCharactersList(List<CharacterStats> list) { _charactersList = list; }
+
+    public void AddCharacterToList(CharacterStats characterStats)
     {
+        if (characterStats.Faction == Faction.Ally && GetListAllies().Count < _maxNumberOfAllies)
+            _charactersList.Add(characterStats);
+        else if (characterStats.Faction == Faction.Enemy)
+            _charactersList.Add(characterStats);
+    }
+
+    public List<CharacterStats> GetListAllies() 
+    {
+        return _charactersList.Where(s => s.Faction == Faction.Ally).ToList();
+    }
+
+    public List<CharacterStats> GetListEnemies()
+    {
+        return _charactersList.Where(s => s.Faction == Faction.Enemy).ToList();
+    }
+
+    public List<CharacterStats> GetListAllCharacters()
+    {
+        return _charactersList;
+    }
+
+    public void ClearCharacterList()
+    {
+        _charactersList.Clear();
     }
 
     public void LoadScene(string levelToLoad)
@@ -58,7 +95,7 @@ public class MainController : MonoBehaviour
 
     public uint GenerateUniqueID()
     {
-        uniqueId += 1;
-        return uniqueId;
+        CurrentAvailableUniqueId += 1;
+        return CurrentAvailableUniqueId;
     }
 }

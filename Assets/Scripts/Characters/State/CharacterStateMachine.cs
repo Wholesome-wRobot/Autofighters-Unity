@@ -3,37 +3,55 @@ using UnityEngine;
 
 public class CharacterStateMachine : MonoBehaviour
 {
-    public Character character;
-    
-    public Spell selectedSpell = null;
-    public List<Character> targetsList = new List<Character>();
+    public Character Character { get; private set; }
+    public Spell SelectedSpell { get; private set; }
+    public List<Character> TargetsList { get; private set; }
+    public WaitForSeconds StateTransitionTime { get; private set; }
 
-    protected CharacterState currentState;
-    public string currentStateName;
+    public string currentStateName; // Just to be shown in editor
+
+    void Awake()
+    {
+        Character = GetComponentInParent<Character>();
+    }
 
     void Start()
     {
-        character = GetComponent<Character>();
+        SetSelectedSpell(null);
         SetCharacterState(new IdleState(this));
+        SetTargetsList(new List<Character>());
+        StateTransitionTime = new WaitForSeconds(0.5f);
     }
+
+    public void SetSelectedSpell(Spell spell) { SelectedSpell = spell; }
+
+    public void SetTargetsList(List<Character> targetsList) { TargetsList = targetsList; }
 
     public void SetCharacterState(CharacterState characterState)
     {
-        currentState = characterState;
         currentStateName = characterState.DisplayName;
         StartCoroutine(characterState.Run());
     }
 
-    // Called at End turn
+    // Called from End turn state
     public void ResetStateMachine()
     {
-        selectedSpell = null;
-        targetsList.Clear();
+        SetSelectedSpell(null);
+        TargetsList.Clear();
         SetCharacterState(new IdleState(this));
     }
 
-    public void TriggerSPellImpact()
+    // Called in the middle of the cast animation
+    public void TriggerSpellInstanceCreation()
     {
-        SetCharacterState(new ApplySpellEffectState(this));
+        SetCharacterState(new CreateSpellInstanceState(this));
+    }
+
+    public void InstantiateSpell(Spell spell, Character caster, Character target)
+    {
+        SpellInstance spellObject = Instantiate(Resources.Load<SpellInstance>("Prefabs/SpellInstance"));
+        spellObject.SetSpell(spell);
+        spellObject.SetCaster(caster);
+        spellObject.SetTarget(target);
     }
 }

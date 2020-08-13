@@ -5,49 +5,47 @@ using UnityEngine;
 
 public class SelectTargetsState : CharacterState
 {
-    public SelectTargetsState(CharacterStateMachine stateMachine) : base(stateMachine)
-    {
-        DisplayName = "Selecting targets";
-    }
+    public override string DisplayName => "Selecting targets";
+
+    public SelectTargetsState(CharacterStateMachine stateMachine) : base (stateMachine) { }
 
     public override IEnumerator Run()
     {
-        characterStateMachine.targetsList = Object.FindObjectsOfType<Character>().ToList();
+        _stateMachine.SetTargetsList(Object.FindObjectsOfType<Character>().ToList());
 
-        List<Character> targetsList = characterStateMachine.targetsList;
+        List<Character> targetsList = _stateMachine.TargetsList;
 
         // If no spell selected, we end turn
-        if (characterStateMachine.selectedSpell == null)
-            characterStateMachine.SetCharacterState(new EndTurnState(characterStateMachine));
+        if (_stateMachine.SelectedSpell == null)
+            _stateMachine.SetCharacterState(new EndTurnState(_stateMachine));
 
         // Filter targetsList by faction
-        FilterTargetsListByFaction(characterStateMachine, targetsList);
+        FilterTargetsListByFaction(_stateMachine, targetsList);
 
         // Filter targetList by condition
 
         // Filter targetList by single/multitarget
-        FilterTargetsByMultiOrSingle(characterStateMachine, targetsList);
+        FilterTargetsByMultiOrSingle(_stateMachine, targetsList);
 
-        // Log
+        // No target found
         if (targetsList.Count <= 0)
-            Debug.Log($"No target found for {characterStateMachine.selectedSpell.DisplayName}");
+        {
+            _stateMachine.Character.SpawnFloatingText("NO TARGET", FloatingTextType.Neutral); 
+            _stateMachine.SetCharacterState(new EndTurnState(_stateMachine));
+        }
         else
-            Debug.Log($"{targetsList.Count} target(s) found");
+        {
+            _stateMachine.SetTargetsList(targetsList);
+            _stateMachine.SetCharacterState(new LaunchCastAnimation(_stateMachine));
+        }
 
-        characterStateMachine.targetsList = targetsList;
-
-        yield return new WaitForSeconds(0.5f);
-
-        if (targetsList.Count > 0)
-            characterStateMachine.SetCharacterState(new LaunchSpellAnimation(characterStateMachine));
-        else
-            characterStateMachine.SetCharacterState(new EndTurnState(characterStateMachine));
+        yield return _stateMachine.StateTransitionTime;
     }
 
     // Filter targetList by single/multitarget (we remove targets from the list until correct amount)
     private static void FilterTargetsByMultiOrSingle(CharacterStateMachine stateMachine, List<Character> targetsList)
     {
-        while (targetsList.Count > stateMachine.selectedSpell.TargetAmount)
+        while (targetsList.Count > stateMachine.SelectedSpell.TargetAmount)
         {
             int randomNumber = Random.Range(0, targetsList.Count);
             targetsList.RemoveAt(randomNumber);
@@ -58,32 +56,32 @@ public class SelectTargetsState : CharacterState
     private static void FilterTargetsListByFaction(CharacterStateMachine stateMachine, List<Character> targetsList)
     {
         // If target faction is opposite
-        if (stateMachine.selectedSpell.DefaultTargetFaction == TargetFaction.Opposite)
+        if (stateMachine.SelectedSpell.DefaultTargetFaction == TargetFaction.Opposite)
             KeepOnlyOppositeFaction(stateMachine, targetsList);
 
         // If target faction is same
-        if (stateMachine.selectedSpell.DefaultTargetFaction == TargetFaction.Same)
+        if (stateMachine.SelectedSpell.DefaultTargetFaction == TargetFaction.Same)
             KeepOnlySameFaction(stateMachine, targetsList);
     }
 
     // Get a list of all characters of opposite faction
     private static void KeepOnlyOppositeFaction(CharacterStateMachine stateMachine, List<Character> targetsList)
     {
-        if (stateMachine.character.stats.faction == Faction.Enemy)
-            targetsList.RemoveAll(t => t.stats.faction == Faction.Enemy);
+        if (stateMachine.Character.Stats.Faction == Faction.Enemy)
+            targetsList.RemoveAll(t => t.Stats.Faction == Faction.Enemy);
 
-        if (stateMachine.character.stats.faction == Faction.Ally)
-            targetsList.RemoveAll(t => t.stats.faction == Faction.Ally);
+        if (stateMachine.Character.Stats.Faction == Faction.Ally)
+            targetsList.RemoveAll(t => t.Stats.Faction == Faction.Ally);
     }
 
     // Get a list of all characters of same faction
     private static void KeepOnlySameFaction(CharacterStateMachine stateMachine, List<Character> targetsList)
     {
-        if (stateMachine.character.stats.faction == Faction.Enemy)
-            targetsList.RemoveAll(t => t.stats.faction == Faction.Ally);
+        if (stateMachine.Character.Stats.Faction == Faction.Enemy)
+            targetsList.RemoveAll(t => t.Stats.Faction == Faction.Ally);
 
-        if (stateMachine.character.stats.faction == Faction.Ally)
-            targetsList.RemoveAll(t => t.stats.faction == Faction.Enemy);
+        if (stateMachine.Character.Stats.Faction == Faction.Ally)
+            targetsList.RemoveAll(t => t.Stats.Faction == Faction.Enemy);
     }
 
     // Select one random Character from list

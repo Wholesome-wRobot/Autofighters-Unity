@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 public enum SpellID
 {
@@ -9,27 +13,25 @@ public enum SpellID
 
 public static class SpellsDB
 {
+    private static Dictionary<SpellID, Spell> SpellDictionary { get; set; }
 
-    static SpellsDB()
+    public static void Initialize()
     {
-        None.Id = SpellID.None;
-        None.DisplayName = "None";
-         
-        // BASIC SPELLS
-        BasicAttack.Id = SpellID.BasicAttack;
-        BasicAttack.DisplayName = "Basic Attack";
-        BasicAttack.DefaultTargetFaction = TargetFaction.Opposite;
-        BasicAttack.Damage = 50;
+        SpellDictionary = new Dictionary<SpellID, Spell>();
 
-        BasicHeal.Id = SpellID.BasicHeal;
-        BasicHeal.DisplayName = "Basic Heal";
-        BasicHeal.DefaultTargetFaction = TargetFaction.Same;
-        BasicHeal.TargetAmount = 2;
-        BasicHeal.Heal = 40;
+        Debug.Log("Initializing Spell DB");
+        var allSpellTypes = Assembly.GetAssembly(typeof(Spell)).GetTypes().Where(t => typeof(Spell).IsAssignableFrom(t) && t.IsAbstract == false);
+
+        // Fill the dictionary with instance of spells
+        foreach (var spellType in allSpellTypes)
+        {
+            Spell spell = Activator.CreateInstance(spellType) as Spell;
+            SpellDictionary.Add(spell.SpellID, spell);
+        }
     }
 
-    public static Spell GetSpellById(SpellID id)
+    public static Spell Get(SpellID id)
     {
-        return AllSpells.Find(i => i.Id == id);
+        return SpellDictionary[id];
     }
 }
