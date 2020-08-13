@@ -3,107 +3,107 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using System.Collections.Generic;
 
-public static class SaveSystem
+namespace AutoFighters
 {
-    public static void SaveController(object data, string fileName)
+    public static class SaveSystem
     {
-        // Set the controller file location
-        string destination = Application.persistentDataPath + "/" + fileName + ".dat";
-        Debug.Log($"Saving to {destination}");
-
-        // Create/overwrite the file if it already exists
-        FileStream file;
-        if (File.Exists(destination)) file = File.OpenWrite(destination);
-        else file = File.Create(destination);
-
-        // Write in the file
-        BinaryFormatter bf = new BinaryFormatter();
-        bf.Serialize(file, data);
-        file.Close();
-    }
-
-    public static object LoadController(string controllerName)
-    {
-        // Set the saved controller location
-        string destination = Application.persistentDataPath + "/" + controllerName + ".dat";
-        Debug.Log($"Loading {destination}");
-        FileStream file;
-
-        // Check if file exists
-        if (File.Exists(destination))
-            file = File.OpenRead(destination);
-        else
+        public static void SaveController(object data, string fileName)
         {
-            Debug.LogError("Save File not found in " + destination);
-            return null;
-        }
+            // Set the controller file location
+            string destination = Application.persistentDataPath + "/" + fileName + ".dat";
+            Debug.Log($"Saving to {destination}");
 
-        // Read the file
-        BinaryFormatter bf = new BinaryFormatter();
-        object data = bf.Deserialize(file);
-        file.Close();
-
-        return data;
-    }
-
-
-    public static void SaveCharacters()
-    {
-        // Define char folder location
-        string charFolder = Application.persistentDataPath + "/char";
-        Directory.CreateDirectory(charFolder);
-
-        // Delete all previous files
-        foreach (string charFile in Directory.GetFiles(charFolder))
-            File.Delete(charFile);
-
-        // if list characters empty
-        if (MainController.Instance.GetListAllCharacters().Count <= 0)
-        {
-            Debug.Log("No character to save");
-            return;
-        }
-
-        // Save all char files
-        foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
-        {
-            // Save them into a unique file
-            string destination = $"{charFolder}/{characterStats.DisplayName}.dat";
-            Debug.Log($"Saving character {characterStats.DisplayName} stats to {destination}");
+            // Create/overwrite the file if it already exists
             FileStream file;
-
             if (File.Exists(destination)) file = File.OpenWrite(destination);
             else file = File.Create(destination);
-            
+
+            // Write in the file
             BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(file, characterStats);
+            bf.Serialize(file, data);
             file.Close();
         }
-    }
 
-    public static List<CharacterStats> LoadCharacters()
-    {
-        List<CharacterStats> resultList = new List<CharacterStats>();
-
-        // Clear list of characters in current controller
-        MainController.Instance.ClearCharacterList();
-
-        // Loop Load all characters from char files
-        foreach (string charFile in Directory.GetFiles(Application.persistentDataPath + "/char"))
+        public static object LoadController(string controllerName)
         {
-            Debug.Log("Loading file : " + charFile.ToString());
-            
+            // Set the saved controller location
+            string destination = Application.persistentDataPath + "/" + controllerName + ".dat";
+            Debug.Log($"Loading {destination}");
             FileStream file;
-            file = File.OpenRead(charFile);
+
+            // Check if file exists
+            if (File.Exists(destination))
+                file = File.OpenRead(destination);
+            else
+            {
+                Debug.LogError("Save File not found in " + destination);
+                return null;
+            }
+
+            // Read the file
             BinaryFormatter bf = new BinaryFormatter();
-            CharacterStats characterStats = (CharacterStats)bf.Deserialize(file);
-
-            resultList.Add(characterStats);
-
+            object data = bf.Deserialize(file);
             file.Close();
+
+            return data;
         }
 
-        return resultList;
-    }
 
+        public static void SaveCharacters()
+        {
+            // Define char folder location
+            string charFolder = Application.persistentDataPath + "/char";
+            Directory.CreateDirectory(charFolder);
+
+            // Delete all previous files
+            foreach (string charFile in Directory.GetFiles(charFolder))
+                File.Delete(charFile);
+
+            // if list characters empty
+            if (MainController.Instance.GetListAllCharacters().Count <= 0)
+            {
+                Debug.LogError("No character to save");
+                return;
+            }
+
+            // Save all char files
+            foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
+            {
+                foreach (Spell spell in characterStats.SpellSlots)
+                {
+                    if (spell != null)
+                        spell.SaveItemToFile(Application.persistentDataPath + "/sp");
+                }
+
+                characterStats.SaveCharacterToFile(charFolder);
+            }
+        }
+
+        public static List<CharacterStats> LoadCharacters()
+        {
+            List<CharacterStats> resultList = new List<CharacterStats>();
+
+            // Clear list of characters in current controller
+            MainController.Instance.ClearCharacterList();
+
+            // Loop Load all characters from char files
+            foreach (string charFile in Directory.GetFiles(Application.persistentDataPath + "/char"))
+            {
+                Debug.Log("Loading file : " + charFile.ToString());
+
+                FileStream file;
+                file = File.OpenRead(charFile);
+                BinaryFormatter bf = new BinaryFormatter();
+                CharacterStats characterStats = (CharacterStats)bf.Deserialize(file);
+
+                resultList.Add(characterStats);
+
+                file.Close();
+            }
+
+            // Instantiate the spells to equip
+
+            return resultList;
+        }
+    }
 }

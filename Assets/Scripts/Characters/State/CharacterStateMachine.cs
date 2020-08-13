@@ -1,57 +1,61 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterStateMachine : MonoBehaviour
+namespace AutoFighters
 {
-    public Character Character { get; private set; }
-    public Spell SelectedSpell { get; private set; }
-    public List<Character> TargetsList { get; private set; }
-    public WaitForSeconds StateTransitionTime { get; private set; }
-
-    public string currentStateName; // Just to be shown in editor
-
-    void Awake()
+    public class CharacterStateMachine : MonoBehaviour
     {
-        Character = GetComponentInParent<Character>();
-    }
+        public Character Character { get; private set; }
+        public Spell SelectedSpell { get; private set; }
+        public List<Character> TargetsList { get; private set; }
+        public WaitForSeconds StateTransitionTime { get; private set; }
 
-    void Start()
-    {
-        SetSelectedSpell(null);
-        SetCharacterState(new IdleState(this));
-        SetTargetsList(new List<Character>());
-        StateTransitionTime = new WaitForSeconds(0.5f);
-    }
+        public string currentStateName; // Just to be shown in editor
 
-    public void SetSelectedSpell(Spell spell) { SelectedSpell = spell; }
+        void Awake()
+        {
+            Character = GetComponentInParent<Character>();
+        }
 
-    public void SetTargetsList(List<Character> targetsList) { TargetsList = targetsList; }
+        void Start()
+        {
+            SetSelectedSpell(null);
+            SetCharacterState(new IdleState(this));
+            SetTargetsList(new List<Character>());
+            StateTransitionTime = new WaitForSeconds(0.5f);
+        }
 
-    public void SetCharacterState(CharacterState characterState)
-    {
-        currentStateName = characterState.DisplayName;
-        StartCoroutine(characterState.Run());
-    }
+        public void SetSelectedSpell(Spell spell) { SelectedSpell = spell; }
 
-    // Called from End turn state
-    public void ResetStateMachine()
-    {
-        SetSelectedSpell(null);
-        TargetsList.Clear();
-        SetCharacterState(new IdleState(this));
-    }
+        public void SetTargetsList(List<Character> targetsList) { TargetsList = targetsList; }
 
-    // Called in the middle of the cast animation
-    public void TriggerSpellInstanceCreation()
-    {
-        SetCharacterState(new CreateSpellInstanceState(this));
-    }
+        public void SetCharacterState(CharacterState characterState)
+        {
+            currentStateName = characterState.DisplayName;
+            StartCoroutine(characterState.Run());
+        }
 
-    public void InstantiateSpell(Spell spell, Character caster, Character target)
-    {
-        SpellInstance spellObject = Instantiate(Resources.Load<SpellInstance>("Prefabs/SpellInstance"));
-        spellObject.SetSpell(spell);
-        spellObject.SetCaster(caster);
-        spellObject.SetTarget(target);
+        // Called from End turn state
+        public void ResetStateMachine()
+        {
+            SetSelectedSpell(null);
+            TargetsList.Clear();
+            SetCharacterState(new IdleState(this));
+        }
+
+        // Called in the middle of the cast animation
+        public void TriggerSpellInstanceCreation()
+        {
+            SetCharacterState(new CreateSpellInstanceState(this));
+        }
+
+        public void InstantiateSpell(Spell spell, Character caster, Character target)
+        {
+            SpellInstance spellInstance = Instantiate(Resources.Load<SpellInstance>("Prefabs/SpellInstance"));
+
+            spellInstance.SetSpell(spell);
+            spellInstance.SetCaster(caster);
+            spellInstance.SetTarget(target);
+        }
     }
 }

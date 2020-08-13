@@ -592,7 +592,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1bf8a1d4def5d445a1f4e855f068b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 7846732202610861445}
 --- !u!1 &7846732201394101023
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,33 +739,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d342e76bf6ca12f4f8066cd222773bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterSpriteRend: {fileID: 0}
-  canvas: {fileID: 7846732201394100995}
-  nameplate: {fileID: 7846732203301105508}
-  displayState: {fileID: 5196790680954867662}
-  energyText: {fileID: 7846732203191021693}
-  energyBar: {fileID: 2105515315803561997}
-  manaBar: {fileID: 7001995089583245859}
-  healthBar: {fileID: 3552363778766753883}
-  stats:
-    uniqueId: 0
-    name: 
-    faction: 0
-    job: 0
-    positionX: 0
-    positionY: 0
-    currentEnergy: 0
-    maxEnergy: 200
-    energyRate: 0.3
-    maxHealth: 400
-    currentHealth: 400
-    currentMana: 150
-    maxMana: 200
-    spellSlots: 00000000000000000000000000000000
-  characterStateMachine: {fileID: 671978017205400709}
-  anim: {fileID: 0}
-  floatingText: {fileID: 2150735603808462767, guid: 0969f80c9b3086640a1b64c0cd6a5679,
-    type: 3}
 --- !u!114 &671978017205400709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -779,8 +751,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26d32d0425a17bf4baed5c4813e56142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  character: {fileID: 0}
-  targetsList: []
   currentStateName: 
 --- !u!1 &7846732203191021691
 GameObject:

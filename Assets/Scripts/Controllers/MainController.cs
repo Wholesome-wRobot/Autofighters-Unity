@@ -3,99 +3,107 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainController : MonoBehaviour
+namespace AutoFighters
 {
-    [SerializeField]
-    private List<CharacterStats> _charactersList;
-    private int _maxNumberOfAllies = 4;
-
-    public GameState GameState { get; private set; }
-    public uint CurrentAvailableUniqueId { get; private set; }
-
-    public static MainController CN { get; private set; }
-
-    public static MainController Instance
+    public class MainController : MonoBehaviour
     {
-        get
-        { 
-            if (CN == null)
-            {
-                CN = FindObjectOfType<MainController>();
+        [SerializeField]
+        private List<CharacterStats> _characterList;
+        public List<CharacterStats> CharacterList { get { return _characterList; } private set => _characterList = value; }
 
+        [SerializeField]
+        private Inventory _inventory;
+        public Inventory Inventory { get { return _inventory; } private set => _inventory = value; }
+
+        private readonly int _maxNumberOfAllies = 4;
+
+        public GameState GameState { get; private set; }
+        public ulong CurrentAvailableUniqueId { get; private set; }
+
+        public static MainController CN { get; private set; }
+
+        public static MainController Instance
+        {
+            get
+            {
                 if (CN == null)
                 {
-                    GameObject container = new GameObject(Consts.MainControllerName);
-                    CN = container.AddComponent<MainController>();
+                    CN = FindObjectOfType<MainController>();
+
+                    if (CN == null)
+                    {
+                        GameObject container = new GameObject(Consts.MainControllerName);
+                        CN = container.AddComponent<MainController>();
+                    }
                 }
+
+                return CN;
             }
-
-            return CN;
         }
-    }
 
-    private void Awake()
-    {
-        SpellsDB.Initialize();
+        private void Awake()
+        {
+            // Random seed
+            Random.InitState((int)System.DateTime.Now.Ticks);
 
-        // Random seed
-        Random.InitState((int)System.DateTime.Now.Ticks);
+            if (CN != null)
+                Destroy(CN);
+            else
+                CN = this;
 
-        if (CN != null)
-            Destroy(CN);
-        else
-            CN = this;
+            DontDestroyOnLoad(gameObject);
+        }
 
-        DontDestroyOnLoad(gameObject);
-    }
-    
-    void Start() 
-    {
-        _charactersList = new List<CharacterStats>();
-        GameState = GameState.MainMenu;
-    }
+        void Start()
+        {
+            CharacterList = new List<CharacterStats>();
+            Inventory = new Inventory();
+            GameState = GameState.MainMenu;
+        }
 
-    public void SetCurrentAvailableUniqueId(uint id) { CurrentAvailableUniqueId = id; }
+        public void SetCurrentAvailableUniqueId(ulong id) { CurrentAvailableUniqueId = id; }
 
-    public void SetGameState(GameState gameState) { GameState = GameState; }
+        public void SetGameState(GameState gameState) { GameState = GameState; }
 
-    public void SetCharactersList(List<CharacterStats> list) { _charactersList = list; }
+        public void SetCharactersList(List<CharacterStats> list) { CharacterList = list; }
 
-    public void AddCharacterToList(CharacterStats characterStats)
-    {
-        if (characterStats.Faction == Faction.Ally && GetListAllies().Count < _maxNumberOfAllies)
-            _charactersList.Add(characterStats);
-        else if (characterStats.Faction == Faction.Enemy)
-            _charactersList.Add(characterStats);
-    }
+        public void AddCharacterToList(CharacterStats characterStats)
+        {
+            if (characterStats.Faction == Faction.Ally && GetListAllies().Count < _maxNumberOfAllies)
+                CharacterList.Add(characterStats);
+            else if (characterStats.Faction == Faction.Enemy)
+                CharacterList.Add(characterStats);
+        }
 
-    public List<CharacterStats> GetListAllies() 
-    {
-        return _charactersList.Where(s => s.Faction == Faction.Ally).ToList();
-    }
+        public List<CharacterStats> GetListAllies()
+        {
+            return CharacterList.Where(s => s.Faction == Faction.Ally).ToList();
+        }
 
-    public List<CharacterStats> GetListEnemies()
-    {
-        return _charactersList.Where(s => s.Faction == Faction.Enemy).ToList();
-    }
+        public List<CharacterStats> GetListEnemies()
+        {
+            return CharacterList.Where(s => s.Faction == Faction.Enemy).ToList();
+        }
 
-    public List<CharacterStats> GetListAllCharacters()
-    {
-        return _charactersList;
-    }
+        public List<CharacterStats> GetListAllCharacters()
+        {
+            return CharacterList;
+        }
 
-    public void ClearCharacterList()
-    {
-        _charactersList.Clear();
-    }
+        public void ClearCharacterList()
+        {
+            CharacterList.Clear();
+        }
 
-    public void LoadScene(string levelToLoad)
-    {
-        SceneManager.LoadScene(levelToLoad);
-    }
+        public void LoadScene(string levelToLoad)
+        {
+            SceneManager.LoadScene(levelToLoad);
+        }
 
-    public uint GenerateUniqueID()
-    {
-        CurrentAvailableUniqueId += 1;
-        return CurrentAvailableUniqueId;
+        public ulong GenerateUniqueID()
+        {
+            CurrentAvailableUniqueId += 1;
+            return CurrentAvailableUniqueId;
+        }
     }
 }

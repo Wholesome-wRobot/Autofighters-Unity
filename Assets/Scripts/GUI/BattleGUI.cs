@@ -2,17 +2,20 @@
 using TMPro;
 using UnityEngine;
 
-public class BattleGUI : MonoBehaviour
+namespace AutoFighters
 {
-    private TextMeshProUGUI _timer;
-
-    void Awake()
+    public class BattleGUI : MonoBehaviour
     {
-        _timer = GetComponentsInChildren<TextMeshProUGUI>()[0];
-    }
+        private TextMeshProUGUI _timer;
 
-    void Update()
-    {
-        _timer.SetText(BattleController.Instance.CurrentFrame.ToString());
+        void Awake()
+        {
+            _timer = GetComponentsInChildren<TextMeshProUGUI>()[0];
+        }
+
+        void Update()
+        {
+            _timer.SetText(BattleController.Instance.CurrentFrame.ToString());
+        }
     }
 }

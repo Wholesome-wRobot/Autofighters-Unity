@@ -2,53 +2,55 @@
 using System.Linq;
 using UnityEngine;
 
-public class CharacterSpawn : MonoBehaviour
+namespace AutoFighters
 {
-    public GameObject character;
-
-    public void InstantiateControllerCharacters()
+    public class CharacterSpawn : MonoBehaviour
     {
-        // Create array of already instantiated characters
-        Character[] charsAlreadyInstantiated = FindObjectsOfType<Character>();
+        public GameObject character;
 
-        foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
+        public void InstantiateControllerCharacters()
         {
-            // Check for duplicate
-            if (charsAlreadyInstantiated.Any(c => c.Stats.UniqueId == characterStats.UniqueId))
+            // Create array of already instantiated characters
+            Character[] charsAlreadyInstantiated = FindObjectsOfType<Character>();
+
+            foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
             {
-                Debug.LogError($"Character with unique id {characterStats.UniqueId} already exists. Can't spawn.");
-                continue;
+                // Check for duplicate
+                if (charsAlreadyInstantiated.Any(c => c.Stats.UniqueId == characterStats.UniqueId))
+                {
+                    Debug.LogError($"Character with unique id {characterStats.UniqueId} already exists. Can't spawn.");
+                    continue;
+                }
+
+                // Find spot
+                CharacterSpot firstSpotAvailable = GetFirstCharacterSpotAvailable(characterStats.Faction);
+                if (firstSpotAvailable == null)
+                {
+                    Debug.LogError($"Alert, no spot available for {characterStats.DisplayName}");
+                    continue;
+                }
+
+                // Instantiate
+                Character characterInstance = Instantiate(Resources.Load<Character>("Prefabs/Character"), firstSpotAvailable.transform.position, Quaternion.identity);
+
+                // Load stats into new character
+                characterInstance.GetComponent<Character>().LoadStats(characterStats);
+
+                // Attach character to spot
+                firstSpotAvailable.GetComponent<CharacterSpot>().AttachCharacter(characterStats);
             }
-
-            // Find spot
-            CharacterSpot firstSpotAvailable = GetFirstCharacterSpotAvailable(characterStats.Faction);
-            if (firstSpotAvailable == null)
-            {
-                Debug.LogError($"Alert, no spot available for {characterStats.DisplayName}");
-                continue;
-            }
-
-            // Instantiate
-            Debug.Log($"Instantiating {characterStats.DisplayName}");
-            Character characterInstance = Instantiate(Resources.Load<Character>("Prefabs/Character"), firstSpotAvailable.transform.position, Quaternion.identity);
-
-            // Load stats into new character
-            characterInstance.GetComponent<Character>().LoadStats(characterStats);
-
-            // Attach character to spot
-            firstSpotAvailable.GetComponent<CharacterSpot>().AttachCharacter(characterStats);
         }
-    }
 
-    private CharacterSpot GetFirstCharacterSpotAvailable(Faction faction)
-    {
-        List<CharacterSpot> allSpots = FindObjectsOfType<CharacterSpot>().OrderBy(o => o.id).ToList();
-
-        foreach (CharacterSpot spot in allSpots)
+        private CharacterSpot GetFirstCharacterSpotAvailable(Faction faction)
         {
-            if (spot.spotFaction == faction && !spot.IsOccupied)
-                return spot;
+            List<CharacterSpot> allSpots = FindObjectsOfType<CharacterSpot>().OrderBy(o => o.id).ToList();
+
+            foreach (CharacterSpot spot in allSpots)
+            {
+                if (spot.spotFaction == faction && !spot.IsOccupied)
+                    return spot;
+            }
+            return null;
         }
-        return null;
     }
 }

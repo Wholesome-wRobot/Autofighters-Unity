@@ -1,12 +1,15 @@
-﻿[System.Serializable]
-public class MainControllerData
+﻿namespace AutoFighters
 {
-    public GameState gameState;
-    public uint uniqueId;
-
-    public MainControllerData(MainController mainController)
+    [System.Serializable]
+    public class MainControllerData
     {
-        gameState = mainController.GameState;
-        uniqueId = mainController.CurrentAvailableUniqueId;
+        public GameState gameState;
+        public ulong uniqueId;
+
+        public MainControllerData(MainController mainController)
+        {
+            gameState = mainController.GameState;
+            uniqueId = mainController.CurrentAvailableUniqueId;
+        }
     }
 }

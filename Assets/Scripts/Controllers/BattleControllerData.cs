@@ -1,12 +1,15 @@
-﻿[System.Serializable]
-public class BattleControllerData
+﻿namespace AutoFighters
 {
-    public int currentFrame;
-    public BattleState battleState;
-
-    public BattleControllerData(BattleController battleController)
+    [System.Serializable]
+    public class BattleControllerData
     {
-        currentFrame = battleController.CurrentFrame;
-        battleState = battleController.BattleState;
+        public int currentFrame;
+        public BattleState battleState;
+
+        public BattleControllerData(BattleController battleController)
+        {
+            currentFrame = battleController.CurrentFrame;
+            battleState = battleController.BattleState;
+        }
     }
 }

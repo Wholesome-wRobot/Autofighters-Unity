@@ -1,18 +1,21 @@
 ﻿using System.Collections;
 
-public abstract class CharacterState
+namespace AutoFighters
 {
-    protected CharacterStateMachine _stateMachine;
-
-    public abstract string DisplayName { get; }
-
-    public CharacterState(CharacterStateMachine stateMachine)
+    public abstract class CharacterState
     {
-        _stateMachine = stateMachine;
-    }
+        protected CharacterStateMachine _stateMachine;
 
-    public virtual IEnumerator Run()
-    {
-        yield break;
+        public abstract string DisplayName { get; }
+
+        public CharacterState(CharacterStateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
+        }
+
+        public virtual IEnumerator Run()
+        {
+            yield break;
+        }
     }
 }

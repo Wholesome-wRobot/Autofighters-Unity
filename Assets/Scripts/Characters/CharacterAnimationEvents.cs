@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 
-class CharacterAnimationEvents : MonoBehaviour
+namespace AutoFighters
 {
-    private Character _character;
-
-    void Start()
+    class CharacterAnimationEvents : MonoBehaviour
     {
-        _character = GetComponentInParent<Character>();
-    }
+        private Character _character;
 
-    public void HitEvent()
-    {
-        _character.CharacterStateMachine.TriggerSpellInstanceCreation();
+        void Start()
+        {
+            _character = GetComponentInParent<Character>();
+        }
+
+        public void HitEvent()
+        {
+            _character.CharacterStateMachine.TriggerSpellInstanceCreation();
+        }
     }
 }

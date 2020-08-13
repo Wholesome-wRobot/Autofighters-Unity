@@ -3,114 +3,121 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 
-public class Character : MonoBehaviour
+namespace AutoFighters
 {
-    private SpriteRenderer _characterSpriteRend;
-    private TextMeshProUGUI _nameplate; 
-    private TextMeshProUGUI _displayState;
-    private TextMeshProUGUI _energyText;
-
-    private Image _energyBar;
-    private Image _manaBar;
-    private Image _healthBar;
-
-    public Animator Anim { get; private set; }
-    public CharacterStateMachine CharacterStateMachine { get; private set; }
-    public CharacterStats Stats { get; private set; }
-
-    void Awake()
+    public class Character : MonoBehaviour
     {
-        Anim = GetComponentInChildren<Animator>();
-        CharacterStateMachine = GetComponentInChildren<CharacterStateMachine>();
+        private SpriteRenderer _characterSpriteRend;
+        private TextMeshProUGUI _nameplate;
+        private TextMeshProUGUI _displayState;
+        private TextMeshProUGUI _energyText;
 
-        _characterSpriteRend = GetComponentInChildren<SpriteRenderer>();
-        _nameplate = GetComponentsInChildren<TextMeshProUGUI>()[0];
-        _displayState = GetComponentsInChildren<TextMeshProUGUI>()[1];
-        _energyText = GetComponentsInChildren<TextMeshProUGUI>()[2];
+        private Image _energyBar;
+        private Image _manaBar;
+        private Image _healthBar;
 
-        // Needs refactoring
-        _energyBar = GetComponentsInChildren<Image>()[1];
-        _healthBar = GetComponentsInChildren<Image>()[2];
-        _manaBar = GetComponentsInChildren<Image>()[3];
-    }
+        public Animator Anim { get; private set; }
+        public CharacterStateMachine CharacterStateMachine { get; private set; }
+        public CharacterStats Stats { get; private set; }
 
-    void Start() 
-    {
-        _nameplate.SetText(Stats.DisplayName);
-
-        // Flip if enemy
-        if (Stats.Faction == Faction.Enemy)
-            _characterSpriteRend.flipX = true; 
-    }
-
-    void Update()
-    {
-        if (BattleController.Instance.BattleState == BattleState.Running)
+        void Awake()
         {
-            Stats.CurrentEnergy += Stats.EnergyRate;
-            //stats.currentMana -= 0.5f;
-            //stats.currentHealth += 0.2f;
+            Anim = GetComponentInChildren<Animator>();
+            CharacterStateMachine = GetComponentInChildren<CharacterStateMachine>();
 
-            _energyText.SetText(Stats.CurrentEnergy.ToString());
+            _characterSpriteRend = GetComponentInChildren<SpriteRenderer>();
+            _nameplate = GetComponentsInChildren<TextMeshProUGUI>()[0];
+            _displayState = GetComponentsInChildren<TextMeshProUGUI>()[1];
+            _energyText = GetComponentsInChildren<TextMeshProUGUI>()[2];
+
+            // Needs refactoring
+            _energyBar = GetComponentsInChildren<Image>()[1];
+            _healthBar = GetComponentsInChildren<Image>()[2];
+            _manaBar = GetComponentsInChildren<Image>()[3];
         }
 
-        _energyBar.fillAmount = Stats.CurrentEnergy / Stats.MaxEnergy;
-        _manaBar.fillAmount = Stats.CurrentMana / Stats.MaxMana;
-        _healthBar.fillAmount = Stats.CurrentHealth / Stats.MaxHealth;
-
-        _displayState.SetText(CharacterStateMachine.currentStateName);
-
-        // Character's turn to act
-        if (Stats.CurrentEnergy >= Stats.MaxEnergy && BattleController.Instance.BattleState == BattleState.Running)
+        void Start()
         {
-            CharacterStateMachine.SetCharacterState(new StartTurnState(CharacterStateMachine));
+            EquipSpell(new BasicAttack(), 1);
+            EquipSpell(new BasicHeal(), 3);
+
+            _nameplate.SetText(Stats.DisplayName);
+
+            // Flip if enemy
+            if (Stats.Faction == Faction.Enemy)
+                _characterSpriteRend.flipX = true;
         }
-    }
 
-    public void LoadStats(CharacterStats stats)
-    {
-        Stats = stats;
-    }
+        void Update()
+        {
+            if (BattleController.Instance.BattleState == BattleState.Running)
+            {
+                Stats.CurrentEnergy += Stats.EnergyRate;
+                //stats.currentMana -= 0.5f;
+                //stats.currentHealth += 0.2f;
 
-    public void EquipSpell(SpellID spellId, int slot)
-    {
-        Stats.SpellSlots[slot] = spellId;
-    }
+                _energyText.SetText(Stats.CurrentEnergy.ToString());
+            }
 
-    public void ReceiveDamage(int amount) 
-    {
-        Stats.CurrentHealth -= amount;
-        Stats.CurrentHealth = Math.Max(0, Stats.CurrentHealth);
+            _energyBar.fillAmount = Stats.CurrentEnergy / Stats.MaxEnergy;
+            _manaBar.fillAmount = Stats.CurrentMana / Stats.MaxMana;
+            _healthBar.fillAmount = Stats.CurrentHealth / Stats.MaxHealth;
 
-        // Floating text
-        if (Stats.Faction == Faction.Ally)
-            SpawnFloatingText(amount.ToString(), FloatingTextType.DamageAlly);
-        else
-            SpawnFloatingText(amount.ToString(), FloatingTextType.DamageEnemy);
+            _displayState.SetText(CharacterStateMachine.currentStateName);
 
-        Anim.SetTrigger(AnimationTrigger.TakeDamage.ToString());
-    }
+            // Character's turn to act
+            if (Stats.CurrentEnergy >= Stats.MaxEnergy && BattleController.Instance.BattleState == BattleState.Running)
+            {
+                CharacterStateMachine.SetCharacterState(new StartTurnState(CharacterStateMachine));
+            }
+        }
 
-    public void ReceiveHeal(int amount)
-    {
-        Stats.CurrentHealth += amount;
-        Stats.CurrentHealth = Math.Min(Stats.MaxHealth, Stats.CurrentHealth);
+        public void LoadStats(CharacterStats stats)
+        {
+            Stats = stats;
+        }
 
-        // Floating text
-        SpawnFloatingText(amount.ToString(), FloatingTextType.Heal);
+        public void EquipSpell(Spell spell, int slot)
+        {
+            Debug.Log($"{Stats.DisplayName} equipped {spell.DisplayName} in slot {slot}");
+            Stats.SpellSlots[slot] = spell;
+        }
 
-        Anim.SetTrigger(AnimationTrigger.TakeDamage.ToString());
-    }
+        public void ReceiveDamage(int amount)
+        {
+            Stats.CurrentHealth -= amount;
+            Stats.CurrentHealth = Math.Max(0, Stats.CurrentHealth);
 
-    public void SpawnFloatingText(string text, FloatingTextType type)
-    {
-        FloatingText textInstance = Instantiate(Resources.Load<FloatingText>("Prefabs/FloatingText"));
+            // Floating text
+            if (Stats.Faction == Faction.Ally)
+                SpawnFloatingText(amount.ToString(), FloatingTextType.DamageAlly);
+            else
+                SpawnFloatingText(amount.ToString(), FloatingTextType.DamageEnemy);
 
-        textInstance.GetComponent<FloatingText>().SetText(text);
-        textInstance.GetComponent<FloatingText>().SetType(type);
+            Anim.SetTrigger(AnimationTrigger.TakeDamage.ToString());
+        }
 
-        Vector3 characterPosition = GetComponent<Transform>().position;
+        public void ReceiveHeal(int amount)
+        {
+            Stats.CurrentHealth += amount;
+            Stats.CurrentHealth = Math.Min(Stats.MaxHealth, Stats.CurrentHealth);
 
-        textInstance.GetComponent<RectTransform>().position = new Vector3(characterPosition.x, characterPosition.y + 1, 0.5f);
+            // Floating text
+            SpawnFloatingText(amount.ToString(), FloatingTextType.Heal);
+
+            Anim.SetTrigger(AnimationTrigger.TakeDamage.ToString());
+        }
+
+        public void SpawnFloatingText(string text, FloatingTextType type)
+        {
+            FloatingText textInstance = Instantiate(Resources.Load<FloatingText>("Prefabs/FloatingText"));
+
+            textInstance.GetComponent<FloatingText>().SetText(text);
+            textInstance.GetComponent<FloatingText>().SetType(type);
+
+            Vector3 characterPosition = GetComponent<Transform>().position;
+
+            textInstance.GetComponent<RectTransform>().position = new Vector3(characterPosition.x, characterPosition.y + 1, 0.5f);
+        }
     }
 }
