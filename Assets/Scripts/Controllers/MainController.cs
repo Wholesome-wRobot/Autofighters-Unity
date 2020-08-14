@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,18 +8,18 @@ namespace AutoFighters
 {
     public class MainController : MonoBehaviour
     {
-        [SerializeField]
+        [SerializeField] // just to show in editor
         private List<CharacterStats> _characterList;
         public List<CharacterStats> CharacterList { get { return _characterList; } private set => _characterList = value; }
 
-        [SerializeField]
+        [SerializeField] // just to show in editor
         private Inventory _inventory;
         public Inventory Inventory { get { return _inventory; } private set => _inventory = value; }
 
         private readonly int _maxNumberOfAllies = 4;
 
         public GameState GameState { get; private set; }
-        public ulong CurrentAvailableUniqueId { get; private set; }
+        public ulong CurrentAvailableUniqueId { get; private set; } 
 
         public static MainController CN { get; private set; }
 
@@ -29,14 +30,12 @@ namespace AutoFighters
                 if (CN == null)
                 {
                     CN = FindObjectOfType<MainController>();
-
                     if (CN == null)
                     {
                         GameObject container = new GameObject(Consts.MainControllerName);
                         CN = container.AddComponent<MainController>();
                     }
                 }
-
                 return CN;
             }
         }
@@ -44,7 +43,7 @@ namespace AutoFighters
         private void Awake()
         {
             // Random seed
-            Random.InitState((int)System.DateTime.Now.Ticks);
+            UnityEngine.Random.InitState((int)DateTime.Now.Ticks);
 
             if (CN != null)
                 Destroy(CN);
@@ -56,9 +55,22 @@ namespace AutoFighters
 
         void Start()
         {
+            GameState = GameState.MainMenu;
+
             CharacterList = new List<CharacterStats>();
             Inventory = new Inventory();
-            GameState = GameState.MainMenu;
+
+            /*
+            Inventory.AddToInventory((BasicAttack) ScriptableObject.CreateInstance(typeof(BasicAttack)));
+            Inventory.AddToInventory((LesserThan)ScriptableObject.CreateInstance(typeof(LesserThan)));
+            Inventory.AddToInventory((CurrentHealth)ScriptableObject.CreateInstance(typeof(CurrentHealth)));
+            Inventory.AddToInventory((FiftyPercent)ScriptableObject.CreateInstance(typeof(FiftyPercent)));
+            */
+
+            Inventory.AddToInventory(new BasicAttack());
+            Inventory.AddToInventory(new BasicHeal());
+            Inventory.AddToInventory(new FiftyPercent());
+            Inventory.AddToInventory(new GreaterThan());
         }
 
         public void SetCurrentAvailableUniqueId(ulong id) { CurrentAvailableUniqueId = id; }

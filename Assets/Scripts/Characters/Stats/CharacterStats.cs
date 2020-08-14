@@ -63,26 +63,19 @@ namespace AutoFighters
 
         // -------------------- Spells --------------------
 
-        // Used to save the spell list into character files
         [SerializeField]
-        private List<ulong> _savableSpellList;
-
-        // Actual spell list
-        [NonSerialized]
         private List<Spell> _spellSlots;
         public List<Spell> SpellSlots { get { return _spellSlots; } set => _spellSlots = value; }
 
         public CharacterStats()
         {
-            _savableSpellList = new List<ulong>();
-
             _spellSlots = new List<Spell>()
-        {
-            null,
-            null,
-            null,
-            null
-        };
+            {
+                null,
+                null,
+                null,
+                null
+            };
 
             CurrentEnergy = 0;
             MaxEnergy = 100;
@@ -94,31 +87,6 @@ namespace AutoFighters
             CurrentMana = 100;
 
             EnergyRate = 0.1f;
-        }
-
-        public void SaveCharacterToFile(string charFolder)
-        {
-            // Turn spellslots into savable ID list
-            _savableSpellList.Clear();
-            foreach (Spell spell in SpellSlots)
-            {
-                if (spell != null)
-                    _savableSpellList.Add(spell.UniqueId);
-                else
-                    _savableSpellList.Add(0);
-            }
-
-            // Save character into a unique file
-            string destination = $"{charFolder}/{UniqueId}.dat";
-            Debug.Log($"Saving character {DisplayName} stats to {destination}");
-            FileStream file;
-
-            if (File.Exists(destination)) file = File.OpenWrite(destination);
-            else file = File.Create(destination);
-
-            BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(file, this);
-            file.Close();
         }
     }
 }

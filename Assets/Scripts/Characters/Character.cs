@@ -38,8 +38,13 @@ namespace AutoFighters
 
         void Start()
         {
-            EquipSpell(new BasicAttack(), 1);
-            EquipSpell(new BasicHeal(), 3);
+            /*
+            EquipSpell((BasicAttack)ScriptableObject.CreateInstance(typeof(BasicAttack)), 1);
+            EquipSpell((BasicHeal)ScriptableObject.CreateInstance(typeof(BasicHeal)), 3);*/
+
+            EquipSpell(new BasicHeal(), 1);
+            EquipSpell(new BasicAttack(), 3);
+
 
             _nameplate.SetText(Stats.DisplayName);
 

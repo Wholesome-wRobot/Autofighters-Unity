@@ -1,10 +1,21 @@
-﻿
+﻿using System;
+using UnityEngine;
+
 namespace AutoFighters
 {
+    [Serializable]
     public abstract class Rune : Item
     {
+        [SerializeField]
+        private RuneId _runeId;
+
         public abstract RuneId RuneId { get; }
         public abstract RuneType RuneType { get; }
+
+        public Rune()
+        {
+            _runeId = RuneId;
+        }
     }
 
     public enum RuneType

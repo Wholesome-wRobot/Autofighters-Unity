@@ -1,9 +1,15 @@
 ﻿using System;
+using TMPro;
+using UnityEngine;
+
 namespace AutoFighters
 {
+    [Serializable]
     public class BasicAttack : Spell
     {
-        public override ulong UniqueId => MainController.Instance.GenerateUniqueID();
+        [SerializeField]
+        private string test = "test";
+
         public override string DisplayName => "Basic Attack";
         public override SpellId SpellID => SpellId.BasicAttack;
         public override int Damage => 50;
@@ -13,7 +19,6 @@ namespace AutoFighters
         public override AnimationTrigger CastAnimationTrigger => AnimationTrigger.Attack;
         public override int ManaCost => 0;
 
-        // Return true when the spell is ready for impact (after an animation, for example)
         public override bool ReadyForImpact(SpellInstance spellInstance)
         {
             return true;

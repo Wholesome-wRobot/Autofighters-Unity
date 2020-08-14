@@ -10,7 +10,7 @@ namespace AutoFighters
         public static void SaveController(object data, string fileName)
         {
             // Set the controller file location
-            string destination = Application.persistentDataPath + "/" + fileName + ".dat";
+            string destination = Consts.ApplicationFolder + "/" + fileName + ".dat";
             Debug.Log($"Saving to {destination}");
 
             // Create/overwrite the file if it already exists
@@ -27,7 +27,7 @@ namespace AutoFighters
         public static object LoadController(string controllerName)
         {
             // Set the saved controller location
-            string destination = Application.persistentDataPath + "/" + controllerName + ".dat";
+            string destination = Consts.ApplicationFolder + "/" + controllerName + ".dat";
             Debug.Log($"Loading {destination}");
             FileStream file;
 
@@ -48,11 +48,10 @@ namespace AutoFighters
             return data;
         }
 
-
         public static void SaveCharacters()
         {
             // Define char folder location
-            string charFolder = Application.persistentDataPath + "/char";
+            string charFolder = Application.persistentDataPath + Consts.CharacterFolder;
             Directory.CreateDirectory(charFolder);
 
             // Delete all previous files
@@ -69,25 +68,27 @@ namespace AutoFighters
             // Save all char files
             foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
             {
+                Debug.Log(JsonUtility.ToJson(characterStats));
+
+                // Save their spells
                 foreach (Spell spell in characterStats.SpellSlots)
                 {
-                    if (spell != null)
-                        spell.SaveItemToFile(Application.persistentDataPath + "/sp");
+                    //if (spell != null)
+                        //spell.SaveItemToFile(Application.persistentDataPath + Consts.SpellsFolder);
                 }
-
-                characterStats.SaveCharacterToFile(charFolder);
             }
         }
 
         public static List<CharacterStats> LoadCharacters()
         {
             List<CharacterStats> resultList = new List<CharacterStats>();
+            string charFolder = Application.persistentDataPath + Consts.CharacterFolder;
 
             // Clear list of characters in current controller
             MainController.Instance.ClearCharacterList();
 
-            // Loop Load all characters from char files
-            foreach (string charFile in Directory.GetFiles(Application.persistentDataPath + "/char"))
+            // Load characters
+            foreach (string charFile in Directory.GetFiles(charFolder))
             {
                 Debug.Log("Loading file : " + charFile.ToString());
 
