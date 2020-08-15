@@ -6,7 +6,7 @@ namespace AutoFighters
     public class CharacterStateMachine : MonoBehaviour
     {
         public Character Character { get; private set; }
-        public Spell SelectedSpell { get; private set; }
+        public ISpell SelectedSpell { get; private set; }
         public List<Character> TargetsList { get; private set; }
         public WaitForSeconds StateTransitionTime { get; private set; }
 
@@ -25,7 +25,7 @@ namespace AutoFighters
             StateTransitionTime = new WaitForSeconds(0.5f);
         }
 
-        public void SetSelectedSpell(Spell spell) { SelectedSpell = spell; }
+        public void SetSelectedSpell(ISpell spell) { SelectedSpell = spell; }
 
         public void SetTargetsList(List<Character> targetsList) { TargetsList = targetsList; }
 
@@ -49,7 +49,7 @@ namespace AutoFighters
             SetCharacterState(new CreateSpellInstanceState(this));
         }
 
-        public void InstantiateSpell(Spell spell, Character caster, Character target)
+        public void InstantiateSpell(ISpell spell, Character caster, Character target)
         {
             SpellInstance spellInstance = Instantiate(Resources.Load<SpellInstance>("Prefabs/SpellInstance"));
 

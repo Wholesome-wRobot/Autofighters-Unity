@@ -3,10 +3,14 @@
 namespace AutoFighters
 {
     [Serializable]
-    public class GreaterThan : Rune
+    public class GreaterThan : Item, IRune
     {
-        public override string DisplayName => "Greater Than Rune";
-        public override RuneId RuneId => RuneId.GreaterThan;
-        public override RuneType RuneType => RuneType.Comparator;
+        public RuneId RuneId => RuneId.GreaterThan;
+        public RuneType RuneType => RuneType.Comparator;
+
+        public GreaterThan()
+        {
+            DisplayName = "Greater Than Rune";
+        }
     }
 }

@@ -7,9 +7,8 @@ namespace AutoFighters
     [Serializable]
     public class Inventory
     {
-        [SerializeField]
-        private List<Item> _content;
-        public List<Item> Content { get { return _content; } private set => _content = value; }
+        [SerializeField] private List<Item> _content;
+        public List<Item> Content { get => _content; private set => _content = value; }
 
         public Inventory()
         {
@@ -19,7 +18,7 @@ namespace AutoFighters
         public void AddToInventory(Item item)
         {
             Debug.Log($"Adding {item.DisplayName} with id {item.UniqueId} to inventory");
-            Content.Add(item);
+            Content.Add(item); 
         }
     }
 }

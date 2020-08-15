@@ -8,13 +8,11 @@ namespace AutoFighters
 {
     public class MainController : MonoBehaviour
     {
-        [SerializeField] // just to show in editor
-        private List<CharacterStats> _characterList;
-        public List<CharacterStats> CharacterList { get { return _characterList; } private set => _characterList = value; }
+        [SerializeField] private List<CharacterStats> _characterList;
+        public List<CharacterStats> CharacterList { get => _characterList; private set => _characterList = value; }
 
-        [SerializeField] // just to show in editor
-        private Inventory _inventory;
-        public Inventory Inventory { get { return _inventory; } private set => _inventory = value; }
+        [SerializeField] private Inventory _inventory;
+        public Inventory Inventory { get => _inventory; private set => _inventory = value; }
 
         private readonly int _maxNumberOfAllies = 4;
 
@@ -59,13 +57,6 @@ namespace AutoFighters
 
             CharacterList = new List<CharacterStats>();
             Inventory = new Inventory();
-
-            /*
-            Inventory.AddToInventory((BasicAttack) ScriptableObject.CreateInstance(typeof(BasicAttack)));
-            Inventory.AddToInventory((LesserThan)ScriptableObject.CreateInstance(typeof(LesserThan)));
-            Inventory.AddToInventory((CurrentHealth)ScriptableObject.CreateInstance(typeof(CurrentHealth)));
-            Inventory.AddToInventory((FiftyPercent)ScriptableObject.CreateInstance(typeof(FiftyPercent)));
-            */
 
             Inventory.AddToInventory(new BasicAttack());
             Inventory.AddToInventory(new BasicHeal());
@@ -116,6 +107,14 @@ namespace AutoFighters
         {
             CurrentAvailableUniqueId += 1;
             return CurrentAvailableUniqueId;
+        }
+
+        public void LoadController(MainControllerData data)
+        {
+            SetGameState(data.gameState);
+            CurrentAvailableUniqueId = data.currentAvailableUniqueId;
+            CharacterList = data.characterList;
+            Inventory = data.inventory;
         }
     }
 }

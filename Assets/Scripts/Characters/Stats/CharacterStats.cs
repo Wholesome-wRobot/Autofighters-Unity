@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace AutoFighters
@@ -11,65 +9,55 @@ namespace AutoFighters
     {
         // -------------------- General --------------------
 
-        [SerializeField]
-        private ulong _uniqueId;
-        public ulong UniqueId { get { return _uniqueId; } set => _uniqueId = value; }
+        [SerializeField] private ulong _uniqueId;
+        public ulong UniqueId { get => _uniqueId; private set => _uniqueId = value; }
 
-        [SerializeField]
-        private string _displayName;
-        public string DisplayName { get { return _displayName; } set => _displayName = value; }
+        [SerializeField] private string _displayName;
+        public string DisplayName { get => _displayName; private set => _displayName = value; }
 
-        [SerializeField]
-        private Faction _faction;
-        public Faction Faction { get { return _faction; } set => _faction = value; }
 
-        [SerializeField]
-        private Job _job;
-        public Job Job { get { return _job; } set => _job = value; }
+        [SerializeField] private Faction _faction;
+        public Faction Faction { get => _faction; private set => _faction = value; }
+
+        [SerializeField] private Job _job;
+        public Job Job { get => _job; private set => _job = value; }
 
         // -------------------- Energy --------------------
 
-        [SerializeField]
-        private float _currentEnergy;
-        public float CurrentEnergy { get { return _currentEnergy; } set => _currentEnergy = value; }
+        [SerializeField] private double _currentEnergy;
+        public double CurrentEnergy { get => _currentEnergy; private set => _currentEnergy = value; }
 
-        [SerializeField]
-        private float _maxEnergy;
-        public float MaxEnergy { get { return _maxEnergy; } set => _maxEnergy = value; }
+        [SerializeField] private double _maxEnergy;
+        public double MaxEnergy { get => _maxEnergy; private set => _maxEnergy = value; }
 
-        [SerializeField]
-        private float _energyRate;
-        public float EnergyRate { get { return _energyRate; } set => _energyRate = value; }
+        [SerializeField] private double _energyRate;
+        public double EnergyRate { get => _energyRate; private set => _energyRate = value; }
 
         // -------------------- Health --------------------
 
-        [SerializeField]
-        private float _maxHealth;
-        public float MaxHealth { get { return _maxHealth; } set => _maxHealth = value; }
+        [SerializeField] private double _maxHealth;
+        public double MaxHealth { get => _maxHealth; private set => _maxHealth = value; }
 
-        [SerializeField]
-        private float _currentHealth;
-        public float CurrentHealth { get { return _currentHealth; } set => _currentHealth = value; }
+        [SerializeField] private double _currentHealth;
+        public double CurrentHealth { get => _currentHealth; private set => _currentHealth = value; }
 
         // -------------------- Mana --------------------
 
-        [SerializeField]
-        private float _currentMana;
-        public float CurrentMana { get { return _currentMana; } set => _currentMana = value; }
+        [SerializeField] private double _currentMana;
+        public double CurrentMana { get => _currentMana; private set => _currentMana = value; }
 
-        [SerializeField]
-        private float _maxMana;
-        public float MaxMana { get { return _maxMana; } set => _maxMana = value; }
+        [SerializeField] private double _maxMana;
+        public double MaxMana { get => _maxMana; private set => _maxMana = value; }
 
         // -------------------- Spells --------------------
 
-        [SerializeField]
-        private List<Spell> _spellSlots;
-        public List<Spell> SpellSlots { get { return _spellSlots; } set => _spellSlots = value; }
+        [SerializeReference] private List<ISpell> _spellSlots;
+        public List<ISpell> SpellSlots { get => _spellSlots; private set => _spellSlots = value; }
+
 
         public CharacterStats()
         {
-            _spellSlots = new List<Spell>()
+            _spellSlots = new List<ISpell>()
             {
                 null,
                 null,
@@ -88,5 +76,15 @@ namespace AutoFighters
 
             EnergyRate = 0.1f;
         }
+
+        public void SetCurrentEnergy(double energy) => CurrentEnergy = energy;
+        public void TickEnergy() => CurrentEnergy += EnergyRate;
+        public void ModifyCurrentHealth(int value)
+        {
+            CurrentHealth = Math.Min(MaxHealth, Math.Max(CurrentHealth += value, 0));
+        }
+        public void SetFaction(Faction faction) => Faction = faction;
+        public void SetUniqueId(ulong uniqueId) => UniqueId = uniqueId;
+        public string SetDisplayName(string displayName) => DisplayName = displayName;
     }
 }

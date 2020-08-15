@@ -3,10 +3,14 @@
 namespace AutoFighters
 {
     [Serializable]
-    public class FiftyPercent : Rune
+    public class FiftyPercent : Item, IRune
     {
-        public override string DisplayName => "50% Rune";
-        public override RuneId RuneId => RuneId.FiftyPercent;
-        public override RuneType RuneType => RuneType.PercentValue;
+        public RuneId RuneId => RuneId.FiftyPercent;
+        public RuneType RuneType => RuneType.PercentValue;
+
+        public FiftyPercent()
+        {
+            DisplayName = "50% Rune";
+        }
     }
 }

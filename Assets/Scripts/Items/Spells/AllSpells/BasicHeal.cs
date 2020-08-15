@@ -1,19 +1,25 @@
 ﻿using System;
+using UnityEngine;
+
 namespace AutoFighters
 {
     [Serializable]
-    public class BasicHeal : Spell
+    public class BasicHeal : Item, ISpell
     {
-        public override string DisplayName => "Basic Heal";
-        public override SpellId SpellID => SpellId.BasicHeal;
-        public override int Damage => 0;
-        public override int Heal => 50;
-        public override TargetFaction DefaultTargetFaction => TargetFaction.Same;
-        public override int TargetAmount => 2;
-        public override AnimationTrigger CastAnimationTrigger => AnimationTrigger.Attack;
-        public override int ManaCost => 20;
+        public SpellId SpellID => SpellId.BasicHeal;
+        public int Damage => 0;
+        public int Heal => 50;
+        public TargetFaction DefaultTargetFaction => TargetFaction.Same;
+        public int TargetAmount => 2;
+        public AnimationTrigger CastAnimationTrigger => AnimationTrigger.Attack;
+        public int ManaCost => 20;
 
-        public override bool ReadyForImpact(SpellInstance spellInstance)
+        public BasicHeal()
+        {
+            DisplayName = "Basic Heal";
+        }
+
+        public bool ReadyForImpact(SpellInstance spellInstance)
         {
             return true;
         }

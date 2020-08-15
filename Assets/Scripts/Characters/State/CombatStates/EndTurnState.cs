@@ -12,7 +12,7 @@ namespace AutoFighters
         {
             yield return _stateMachine.StateTransitionTime;
 
-            _stateMachine.Character.Stats.CurrentEnergy = 0;
+            _stateMachine.Character.Stats.SetCurrentEnergy(0);
             _stateMachine.ResetStateMachine();
             BattleController.Instance.SetBattleState(BattleState.Running);
         }

@@ -3,10 +3,14 @@
 namespace AutoFighters
 {
     [Serializable]
-    public class CurrentHealth : Rune
+    public class CurrentHealth : Item, IRune
     {
-        public override string DisplayName => "Current Health Rune";
-        public override RuneId RuneId => RuneId.CurrentHealth;
-        public override RuneType RuneType => RuneType.NumberValue;
+        public RuneId RuneId => RuneId.CurrentHealth;
+        public RuneType RuneType => RuneType.NumberValue;
+
+        public CurrentHealth()
+        {
+            DisplayName = "Current Health Rune";
+        }
     }
 }

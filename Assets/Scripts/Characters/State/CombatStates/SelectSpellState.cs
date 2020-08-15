@@ -8,10 +8,10 @@ namespace AutoFighters
 
         public SelectSpellState(CharacterStateMachine stateMachine) : base(stateMachine) { }
 
-        public override IEnumerator Run()
+        public override IEnumerator Run() 
         {
             // Loop in character's spell slots
-            foreach (Spell spell in _stateMachine.Character.Stats.SpellSlots)
+            foreach (ISpell spell in _stateMachine.Character.Stats.SpellSlots)
             {
                 if (spell != null)
                 {

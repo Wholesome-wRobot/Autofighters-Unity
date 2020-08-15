@@ -71,9 +71,9 @@
      <Compile Include="Assets\Scripts\Misc\Enums.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\Scripts\Spots\CharacterSpawn.cs" />
      <Compile Include="Assets\Scripts\Items\Spells\AllSpells\BasicHeal.cs" />
      <Compile Include="Assets\Scripts\GUI\BattleGUI.cs" />
+     <Compile Include="Assets\Scripts\Items\Spells\ISpell.cs" />
      <Compile Include="Assets\Scripts\Controllers\MainController.cs" />
      <Compile Include="Assets\Scripts\Items\Runes\AllRunes\Value\CurrentHealth.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
@@ -91,7 +91,6 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
-     <Compile Include="Assets\Scripts\Items\Runes\Rune.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
      <Compile Include="Assets\Scripts\Characters\Character.cs" />
@@ -112,9 +111,9 @@
      <Compile Include="Assets\Scripts\Characters\CharacterAnimationEvents.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
-     <Compile Include="Assets\Scripts\Items\Spells\Spell.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
      <Compile Include="Assets\Scripts\Characters\Stats\CharacterStats.cs" />
+     <Compile Include="Assets\Scripts\Items\Runes\IRune.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
      <Compile Include="Assets\Scripts\Items\Spells\SpellInstance.cs" />
      <Compile Include="Assets\Scripts\Controllers\MainControllerData.cs" />

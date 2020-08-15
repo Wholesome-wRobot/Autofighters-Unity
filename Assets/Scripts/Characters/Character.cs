@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine.UI;
 using System;
+using System.Linq;
 
 namespace AutoFighters
 {
@@ -11,6 +12,8 @@ namespace AutoFighters
         private TextMeshProUGUI _nameplate;
         private TextMeshProUGUI _displayState;
         private TextMeshProUGUI _energyText;
+
+        private CharacterSpot _mySpot;
 
         private Image _energyBar;
         private Image _manaBar;
@@ -38,13 +41,10 @@ namespace AutoFighters
 
         void Start()
         {
-            /*
-            EquipSpell((BasicAttack)ScriptableObject.CreateInstance(typeof(BasicAttack)), 1);
-            EquipSpell((BasicHeal)ScriptableObject.CreateInstance(typeof(BasicHeal)), 3);*/
+            EquipSpell(new BasicHeal(), 3);
+            EquipSpell(new BasicAttack(), 1);
 
-            EquipSpell(new BasicHeal(), 1);
-            EquipSpell(new BasicAttack(), 3);
-
+            _mySpot = FindObjectsOfType<CharacterSpot>().ToList().Find(s => s.OccupiedBy == Stats.UniqueId);
 
             _nameplate.SetText(Stats.DisplayName);
 
@@ -57,16 +57,13 @@ namespace AutoFighters
         {
             if (BattleController.Instance.BattleState == BattleState.Running)
             {
-                Stats.CurrentEnergy += Stats.EnergyRate;
-                //stats.currentMana -= 0.5f;
-                //stats.currentHealth += 0.2f;
-
+                Stats.TickEnergy();
                 _energyText.SetText(Stats.CurrentEnergy.ToString());
             }
 
-            _energyBar.fillAmount = Stats.CurrentEnergy / Stats.MaxEnergy;
-            _manaBar.fillAmount = Stats.CurrentMana / Stats.MaxMana;
-            _healthBar.fillAmount = Stats.CurrentHealth / Stats.MaxHealth;
+            _energyBar.fillAmount = (float)(Stats.CurrentEnergy / Stats.MaxEnergy);
+            _manaBar.fillAmount = (float)(Stats.CurrentMana / Stats.MaxMana);
+            _healthBar.fillAmount = (float)(Stats.CurrentHealth / Stats.MaxHealth);
 
             _displayState.SetText(CharacterStateMachine.currentStateName);
 
@@ -82,7 +79,14 @@ namespace AutoFighters
             Stats = stats;
         }
 
-        public void EquipSpell(Spell spell, int slot)
+        public void DestroyInstance()
+        {
+            Debug.Log("Detaching " + Stats.DisplayName);
+            _mySpot.DetachCharacter();
+            Destroy(gameObject);
+        }
+
+        public void EquipSpell(ISpell spell, int slot)
         {
             Debug.Log($"{Stats.DisplayName} equipped {spell.DisplayName} in slot {slot}");
             Stats.SpellSlots[slot] = spell;
@@ -90,8 +94,7 @@ namespace AutoFighters
 
         public void ReceiveDamage(int amount)
         {
-            Stats.CurrentHealth -= amount;
-            Stats.CurrentHealth = Math.Max(0, Stats.CurrentHealth);
+            Stats.ModifyCurrentHealth(-amount);
 
             // Floating text
             if (Stats.Faction == Faction.Ally)
@@ -104,8 +107,7 @@ namespace AutoFighters
 
         public void ReceiveHeal(int amount)
         {
-            Stats.CurrentHealth += amount;
-            Stats.CurrentHealth = Math.Min(Stats.MaxHealth, Stats.CurrentHealth);
+            Stats.ModifyCurrentHealth(amount);
 
             // Floating text
             SpawnFloatingText(amount.ToString(), FloatingTextType.Heal);

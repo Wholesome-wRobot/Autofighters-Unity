@@ -21,33 +21,20 @@ namespace AutoFighters
             // Save Battle controller
             BattleControllerData dataBattleC = new BattleControllerData(BattleController.Instance);
             SaveSystem.SaveController(dataBattleC, Consts.BattleControllerName);
-
-            // Save characters
-            SaveSystem.SaveCharacters();
         }
 
         public void LoadAll()
         {
-            // Load Main Controller
-            MainControllerData mainControllerData = (MainControllerData)SaveSystem.LoadController(Consts.MainControllerName);
-            MainController.Instance.SetCharactersList(SaveSystem.LoadCharacters());
-            MainController.Instance.SetGameState(mainControllerData.gameState);
-            MainController.Instance.SetCurrentAvailableUniqueId(mainControllerData.uniqueId);
-
-            // Load Battle Controller
-            BattleControllerData battleControllerData = (BattleControllerData)SaveSystem.LoadController(Consts.BattleControllerName);
-            BattleController.Instance.SetBattleState(battleControllerData.battleState);
-            BattleController.Instance.SetCurrentFrame(battleControllerData.currentFrame);
+            MainController.Instance.LoadController((MainControllerData)SaveSystem.GetControllerDataFromFile(Consts.MainControllerName));
+            BattleController.Instance.LoadController((BattleControllerData)SaveSystem.GetControllerDataFromFile(Consts.BattleControllerName));
         }
 
         public void CreateChar(int factionId)
         {
-            CharacterStats newCharStats = new CharacterStats
-            {
-                Faction = (Faction)factionId,
-                UniqueId = MainController.Instance.GenerateUniqueID()
-            };
-            newCharStats.DisplayName = $"{newCharStats.Faction} ({newCharStats.UniqueId})";
+            CharacterStats newCharStats = new CharacterStats();
+            newCharStats.SetFaction((Faction)factionId);
+            newCharStats.SetUniqueId(MainController.Instance.GenerateUniqueID());
+            newCharStats.SetDisplayName($"{newCharStats.Faction} ({newCharStats.UniqueId})");
             MainController.Instance.AddCharacterToList(newCharStats);
         }
 
