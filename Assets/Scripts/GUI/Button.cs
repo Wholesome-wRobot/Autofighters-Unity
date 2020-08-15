@@ -36,6 +36,7 @@ namespace AutoFighters
             newCharStats.SetUniqueId(MainController.Instance.GenerateUniqueID());
             newCharStats.SetDisplayName($"{newCharStats.Faction} ({newCharStats.UniqueId})");
             MainController.Instance.AddCharacterToList(newCharStats);
+            BattleController.Instance.InstantiateCharacter(newCharStats);
         }
 
         public void StartGame()
@@ -43,6 +44,11 @@ namespace AutoFighters
             Debug.Log("Starting Game");
             MainController.Instance.LoadScene(Consts.BattleSceneName);
             MainController.Instance.SetGameState(GameState.Battle);
+        }
+
+        public void InventoryButton()
+        {
+            MainController.Instance.SetActiveMenu(1);
         }
     }
 }

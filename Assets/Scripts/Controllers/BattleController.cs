@@ -60,6 +60,7 @@ namespace AutoFighters
 
         public void InstantiateAllCharacters()
         {
+            Debug.Log(_instantiateAllFlag);
             if (!_instantiateAllFlag)
                 _instantiateAllFlag = true;
             else

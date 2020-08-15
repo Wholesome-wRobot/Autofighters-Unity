@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System;
 using System.Linq;
 
 namespace AutoFighters
@@ -62,7 +61,7 @@ namespace AutoFighters
             }
 
             _energyBar.fillAmount = (float)(Stats.CurrentEnergy / Stats.MaxEnergy);
-            _manaBar.fillAmount = (float)(Stats.CurrentMana / Stats.MaxMana);
+            _manaBar.fillAmount = (float)(Stats.CurrentMana / Stats.MaxMana); 
             _healthBar.fillAmount = (float)(Stats.CurrentHealth / Stats.MaxHealth);
 
             _displayState.SetText(CharacterStateMachine.currentStateName);
@@ -71,6 +70,11 @@ namespace AutoFighters
             if (Stats.CurrentEnergy >= Stats.MaxEnergy && BattleController.Instance.BattleState == BattleState.Running)
             {
                 CharacterStateMachine.SetCharacterState(new StartTurnState(CharacterStateMachine));
+            }
+
+            if (Stats.CurrentHealth <= 0)
+            {
+                CharacterStateMachine.SetCharacterState(new DieState(CharacterStateMachine));
             }
         }
 
@@ -83,6 +87,7 @@ namespace AutoFighters
         {
             Debug.Log("Detaching " + Stats.DisplayName);
             _mySpot.DetachCharacter();
+            MainController.Instance.CharacterList.Remove(Stats);
             Destroy(gameObject);
         }
 

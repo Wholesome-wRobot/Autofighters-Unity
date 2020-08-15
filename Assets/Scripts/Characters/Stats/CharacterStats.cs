@@ -68,7 +68,7 @@ namespace AutoFighters
             CurrentEnergy = 0;
             MaxEnergy = 100;
 
-            MaxHealth = 400;
+            MaxHealth = 200;
             CurrentHealth = MaxHealth;
 
             MaxMana = 200;

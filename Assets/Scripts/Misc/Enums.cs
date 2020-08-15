@@ -35,7 +35,8 @@
     {
         None,
         Attack,
-        TakeDamage
+        TakeDamage,
+        Die
     }
 
     // Characters factions
@@ -59,5 +60,11 @@
         None,
         Priest,
         Warrior
+    }
+
+    public enum ActiveMenu
+    {
+        None,
+        Inventory
     }
 }

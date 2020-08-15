@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 namespace AutoFighters
 {
@@ -13,6 +14,9 @@ namespace AutoFighters
 
         [SerializeField] private Inventory _inventory;
         public Inventory Inventory { get => _inventory; private set => _inventory = value; }
+
+        [SerializeField] private ActiveMenu _currentActiveMenu;
+        public ActiveMenu CurrentActiveMenu { get => _currentActiveMenu; private set => _currentActiveMenu = value; }
 
         private readonly int _maxNumberOfAllies = 4;
 
@@ -54,6 +58,7 @@ namespace AutoFighters
         void Start()
         {
             GameState = GameState.MainMenu;
+            CurrentActiveMenu = ActiveMenu.None;
 
             CharacterList = new List<CharacterStats>();
             Inventory = new Inventory();
@@ -62,6 +67,24 @@ namespace AutoFighters
             Inventory.AddToInventory(new BasicHeal());
             Inventory.AddToInventory(new FiftyPercent());
             Inventory.AddToInventory(new GreaterThan());
+        }
+
+        public void SetActiveMenu(int menu)
+        {
+            Canvas _inventoryMenu = GetComponentInChildren<Canvas>();
+            _inventoryMenu.renderMode = RenderMode.ScreenSpaceCamera;
+            _inventoryMenu.worldCamera = Camera.main;
+
+            if (CurrentActiveMenu == (ActiveMenu)menu)
+            {
+                _inventoryMenu.enabled = false;
+                CurrentActiveMenu = ActiveMenu.None;
+            }
+            else
+            {
+                _inventoryMenu.enabled = true;
+                CurrentActiveMenu = (ActiveMenu)menu;
+            }
         }
 
         public void SetCurrentAvailableUniqueId(ulong id) { CurrentAvailableUniqueId = id; }
