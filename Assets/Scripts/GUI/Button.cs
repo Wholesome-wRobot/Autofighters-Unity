@@ -33,22 +33,20 @@ namespace AutoFighters
         {
             CharacterStats newCharStats = new CharacterStats();
             newCharStats.SetFaction((Faction)factionId);
-            newCharStats.SetUniqueId(MainController.Instance.GenerateUniqueID());
+            //newCharStats.SetUniqueId(MainController.Instance.GenerateUniqueID());
             newCharStats.SetDisplayName($"{newCharStats.Faction} ({newCharStats.UniqueId})");
-            MainController.Instance.AddCharacterToList(newCharStats);
+            MainController.Instance.CharacterManager.AddCharacterToList(newCharStats);
             BattleController.Instance.InstantiateCharacter(newCharStats);
         }
 
         public void StartGame()
         {
-            Debug.Log("Starting Game");
-            MainController.Instance.LoadScene(Consts.BattleSceneName);
             MainController.Instance.SetGameState(GameState.Battle);
         }
 
         public void InventoryButton()
         {
-            MainController.Instance.SetActiveMenu(1);
+            MainController.Instance.SetActiveMenu(MainController.Instance.InventoryManager);
         }
     }
 }

@@ -40,8 +40,9 @@ namespace AutoFighters
 
         void Start()
         {
+            /*
             EquipSpell(new BasicHeal(), 3);
-            EquipSpell(new BasicAttack(), 1);
+            EquipSpell(new BasicAttack(), 1);*/
 
             _mySpot = FindObjectsOfType<CharacterSpot>().ToList().Find(s => s.OccupiedBy == Stats.UniqueId);
 
@@ -87,7 +88,7 @@ namespace AutoFighters
         {
             Debug.Log("Detaching " + Stats.DisplayName);
             _mySpot.DetachCharacter();
-            MainController.Instance.CharacterList.Remove(Stats);
+            MainController.Instance.CharacterManager.RemoveFromList(Stats);
             Destroy(gameObject);
         }
 

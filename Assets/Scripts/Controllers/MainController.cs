@@ -1,27 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 namespace AutoFighters
 {
     public class MainController : MonoBehaviour
     {
-        [SerializeField] private List<CharacterStats> _characterList;
-        public List<CharacterStats> CharacterList { get => _characterList; private set => _characterList = value; }
+        public GameObject CharacterManagerPrefab;
+        public GameObject EventSystemPrefab;
+        public GameObject InventoryManagerPrefab;
+
+        [SerializeField] private IMenuPanel _currentActivePanel;
+        public IMenuPanel CurrentActivePanel { get => _currentActivePanel; private set => _currentActivePanel = value; }
+
+        [SerializeField] private CharacterManager _characterManager;
+        public CharacterManager CharacterManager { get => _characterManager; private set => _characterManager = value; }
 
         [SerializeField] private Inventory _inventory;
-        public Inventory Inventory { get => _inventory; private set => _inventory = value; }
+        public Inventory InventoryManager { get => _inventory; private set => _inventory = value; }
 
-        [SerializeField] private ActiveMenu _currentActiveMenu;
-        public ActiveMenu CurrentActiveMenu { get => _currentActiveMenu; private set => _currentActiveMenu = value; }
+        [SerializeField] private GameState _gameState;
+        public GameState GameState { get => _gameState; private set => _gameState = value; }
 
-        private readonly int _maxNumberOfAllies = 4;
-
-        public GameState GameState { get; private set; }
-        public ulong CurrentAvailableUniqueId { get; private set; } 
+        //[SerializeField] private ulong _currentAvailableUniqueId;
+        //public ulong CurrentAvailableUniqueId { get => _currentAvailableUniqueId; private set => _currentAvailableUniqueId = value; }
 
         public static MainController CN { get; private set; }
 
@@ -48,7 +50,7 @@ namespace AutoFighters
             UnityEngine.Random.InitState((int)DateTime.Now.Ticks);
 
             if (CN != null)
-                Destroy(CN);
+                Destroy(gameObject);
             else
                 CN = this;
 
@@ -58,67 +60,47 @@ namespace AutoFighters
         void Start()
         {
             GameState = GameState.MainMenu;
-            CurrentActiveMenu = ActiveMenu.None;
 
-            CharacterList = new List<CharacterStats>();
-            Inventory = new Inventory();
+            // Bindings
+            GameObject characterManagerPrefab = Instantiate(CharacterManagerPrefab);
+            CharacterManager = characterManagerPrefab.GetComponent<CharacterManager>();
 
-            Inventory.AddToInventory(new BasicAttack());
-            Inventory.AddToInventory(new BasicHeal());
-            Inventory.AddToInventory(new FiftyPercent());
-            Inventory.AddToInventory(new GreaterThan());
+            GameObject inventoryManagerPrefab = Instantiate(InventoryManagerPrefab);
+            InventoryManager = inventoryManagerPrefab.GetComponent<Inventory>();
+
+            Instantiate(EventSystemPrefab);
         }
 
-        public void SetActiveMenu(int menu)
+        public void SetActiveMenu(IMenuPanel panel)
         {
-            Canvas _inventoryMenu = GetComponentInChildren<Canvas>();
-            _inventoryMenu.renderMode = RenderMode.ScreenSpaceCamera;
-            _inventoryMenu.worldCamera = Camera.main;
-
-            if (CurrentActiveMenu == (ActiveMenu)menu)
+            if (CurrentActivePanel != null)
             {
-                _inventoryMenu.enabled = false;
-                CurrentActiveMenu = ActiveMenu.None;
+                CurrentActivePanel.ClosePanel();
+                CurrentActivePanel = null;
             }
-            else
+            else if (CurrentActivePanel != panel)
             {
-                _inventoryMenu.enabled = true;
-                CurrentActiveMenu = (ActiveMenu)menu;
+                panel.OpenPanel();
+                CurrentActivePanel = panel;
             }
         }
 
-        public void SetCurrentAvailableUniqueId(ulong id) { CurrentAvailableUniqueId = id; }
+        //public void SetCurrentAvailableUniqueId(ulong id) { CurrentAvailableUniqueId = id; }
 
-        public void SetGameState(GameState gameState) { GameState = GameState; }
-
-        public void SetCharactersList(List<CharacterStats> list) { CharacterList = list; }
-
-        public void AddCharacterToList(CharacterStats characterStats)
+        public void SetGameState(GameState gameState) 
         {
-            if (characterStats.Faction == Faction.Ally && GetListAllies().Count < _maxNumberOfAllies)
-                CharacterList.Add(characterStats);
-            else if (characterStats.Faction == Faction.Enemy)
-                CharacterList.Add(characterStats);
-        }
+            if (GameState == gameState) return;
 
-        public List<CharacterStats> GetListAllies()
-        {
-            return CharacterList.Where(s => s.Faction == Faction.Ally).ToList();
-        }
+            GameState = gameState;
 
-        public List<CharacterStats> GetListEnemies()
-        {
-            return CharacterList.Where(s => s.Faction == Faction.Enemy).ToList();
-        }
-
-        public List<CharacterStats> GetListAllCharacters()
-        {
-            return CharacterList;
-        }
-
-        public void ClearCharacterList()
-        {
-            CharacterList.Clear();
+            if (gameState == GameState.Battle)
+            {
+                LoadScene(Consts.BattleSceneName);
+            }
+            else if (gameState == GameState.MainMenu)
+            {
+                LoadScene(Consts.MainMenuSceneName);
+            }
         }
 
         public void LoadScene(string levelToLoad)
@@ -126,18 +108,19 @@ namespace AutoFighters
             SceneManager.LoadScene(levelToLoad);
         }
 
-        public ulong GenerateUniqueID()
+        /*public ulong GenerateUniqueID()
         {
             CurrentAvailableUniqueId += 1;
             return CurrentAvailableUniqueId;
-        }
+        }*/
 
         public void LoadController(MainControllerData data)
         {
             SetGameState(data.gameState);
-            CurrentAvailableUniqueId = data.currentAvailableUniqueId;
-            CharacterList = data.characterList;
-            Inventory = data.inventory;
+            //CurrentAvailableUniqueId = data.currentAvailableUniqueId;
+            CharacterManager.SetCharactersList(data.characterList);
+            InventoryManager.LoadInventory(data.inventory);
+            SetActiveMenu(null);
         }
     }
 }

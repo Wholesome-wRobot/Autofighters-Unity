@@ -8,8 +8,11 @@ namespace AutoFighters
     {
         private bool _instantiateAllFlag; // used because Destroying objects only happens after update
         public static BattleController CN { get; private set; }
-        public int CurrentFrame { get; private set; }
+        public ulong CurrentFrame { get; private set; }
         public BattleState BattleState { get; private set; }
+
+        public GameObject SpotsLayout;
+        public GameObject BattleGUI;
 
         public static BattleController Instance
         {
@@ -32,6 +35,9 @@ namespace AutoFighters
         {
             SetCurrentFrame(0);
             SetBattleState(BattleState.StartFight);
+
+            Instantiate(BattleGUI);
+            Instantiate(SpotsLayout);
         }
 
         void Update()
@@ -44,7 +50,7 @@ namespace AutoFighters
         }
 
         public void SetBattleState(BattleState battleState) { BattleState = battleState; }
-        public void SetCurrentFrame(int frame) { CurrentFrame = frame; }
+        public void SetCurrentFrame(ulong frame) { CurrentFrame = frame; }
 
         public void LoadController(BattleControllerData data)
         {
@@ -60,7 +66,6 @@ namespace AutoFighters
 
         public void InstantiateAllCharacters()
         {
-            Debug.Log(_instantiateAllFlag);
             if (!_instantiateAllFlag)
                 _instantiateAllFlag = true;
             else
@@ -68,7 +73,7 @@ namespace AutoFighters
                 if (FindObjectsOfType<Character>().Length <= 0)
                 {
                     // Instantiate characters
-                    foreach (CharacterStats characterStats in MainController.Instance.GetListAllCharacters())
+                    foreach (CharacterStats characterStats in MainController.Instance.CharacterManager.CharacterList)
                         InstantiateCharacter(characterStats);
 
                     _instantiateAllFlag = false;

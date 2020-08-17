@@ -26,7 +26,6 @@
     {
         MainMenu,
         Town,
-        Pause,
         Battle
     }
 

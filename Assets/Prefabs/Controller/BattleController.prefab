@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a49b9c67d49a749b7d85c4637af154, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frameText: {fileID: 0}
-  currentFrame: 0
-  battleState: 2
+  SpotsLayout1: {fileID: 1285180967968422473, guid: ad725e716b6ea804284484300a2b08e4,
+    type: 3}
+  BattleGUI: {fileID: 7420288528692706631, guid: 5debd18127a39764da0a438099bb3397,
+    type: 3}

@@ -14,9 +14,11 @@ namespace AutoFighters
         public AnimationTrigger CastAnimationTrigger => AnimationTrigger.Attack;
         public int ManaCost => 0;
 
+
         public BasicAttack()
         {
             DisplayName = "Basic Attack";
+            //UniqueId = MainController.Instance.GenerateUniqueID();
         }
         
         public bool ReadyForImpact(SpellInstance spellInstance)

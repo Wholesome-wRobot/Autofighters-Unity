@@ -8,14 +8,14 @@ namespace AutoFighters
         public GameState gameState;
         public ulong currentAvailableUniqueId;
         public List<CharacterStats> characterList;
-        public Inventory inventory;
+        public List<Item> inventory;
 
         public MainControllerData(MainController mainController)
         {
             gameState = mainController.GameState;
-            currentAvailableUniqueId = mainController.CurrentAvailableUniqueId;
-            characterList = mainController.CharacterList;
-            inventory = mainController.Inventory;
+            //currentAvailableUniqueId = mainController.CurrentAvailableUniqueId;
+            characterList = mainController.CharacterManager.CharacterList;
+            inventory = mainController.InventoryManager._inventoryItems;
         }
     }
 }

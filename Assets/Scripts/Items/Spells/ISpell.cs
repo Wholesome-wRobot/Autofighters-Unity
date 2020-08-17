@@ -1,4 +1,6 @@
-﻿public enum SpellId
+﻿using UnityEngine.UI;
+
+public enum SpellId
 {
     None,
     BasicAttack,
@@ -9,9 +11,7 @@ namespace AutoFighters
 {
     public interface ISpell
     {
-        ulong UniqueId { get; }
         string DisplayName { get; }
-
         SpellId SpellID { get; }
         int Damage { get; }
         int Heal { get; }
