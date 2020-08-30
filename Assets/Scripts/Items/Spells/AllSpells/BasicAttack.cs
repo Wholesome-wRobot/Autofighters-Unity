@@ -4,26 +4,14 @@ using UnityEngine;
 namespace AutoFighters
 {
     [Serializable]
-    public class BasicAttack : Item, ISpell
+    [CreateAssetMenu(fileName = "BasicAttack", menuName = "Spells/BasicAttack")]
+    public class BasicAttack : Spell
     {
-        public SpellId SpellID => SpellId.BasicAttack;
-        public int Damage => 50;
-        public int Heal => 0;
-        public TargetFaction DefaultTargetFaction => TargetFaction.Opposite;
-        public int TargetAmount => 1;
-        public AnimationTrigger CastAnimationTrigger => AnimationTrigger.Attack;
-        public int ManaCost => 0;
-
-
-        public BasicAttack()
+        public new void OnEnable()
         {
+            base.OnEnable();
             DisplayName = "Basic Attack";
-            //UniqueId = MainController.Instance.GenerateUniqueID();
-        }
-        
-        public bool ReadyForImpact(SpellInstance spellInstance)
-        {
-            return true;
+            ItemId = ItemId.BasicAttack;
         }
     }
 }

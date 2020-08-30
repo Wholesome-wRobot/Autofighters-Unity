@@ -1,16 +1,17 @@
 ﻿using System;
+using UnityEngine;
 
 namespace AutoFighters
 {
     [Serializable]
-    public class CurrentHealth : Item, IRune
+    [CreateAssetMenu(fileName = "Current Health Rune", menuName = "Runes/Current Health Rune")]
+    public class CurrentHealth : Rune
     {
-        public RuneId RuneId => RuneId.CurrentHealth;
-        public RuneType RuneType => RuneType.NumberValue;
-
-        public CurrentHealth()
+        public new void OnEnable()
         {
+            base.OnEnable();
             DisplayName = "Current Health Rune";
+            ItemId = ItemId.CurrentHealth;
         }
     }
 }

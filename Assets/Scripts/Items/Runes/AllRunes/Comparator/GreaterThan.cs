@@ -1,16 +1,17 @@
 ﻿using System;
+using UnityEngine;
 
 namespace AutoFighters
 {
     [Serializable]
-    public class GreaterThan : Item, IRune
+    [CreateAssetMenu(fileName = "Greater Than Rune", menuName = "Runes/Greater Than Rune")]
+    public class GreaterThan : Rune
     {
-        public RuneId RuneId => RuneId.GreaterThan;
-        public RuneType RuneType => RuneType.Comparator;
-
-        public GreaterThan()
+        public new void OnEnable()
         {
+            base.OnEnable();
             DisplayName = "Greater Than Rune";
+            ItemId = ItemId.GreaterThan;
         }
     }
 }

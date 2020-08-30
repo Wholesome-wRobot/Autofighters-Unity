@@ -8,19 +8,6 @@
         StartFight
     }
 
-    // Character state
-    public enum CharState
-    {
-        Idle,
-        StartTurn,
-        SelectTarget,
-        UseSpell,
-        ApplySpellEffect,
-        TakeDamage,
-        ReceiveHeal,
-        Endturn
-    }
-
     // Game state
     public enum GameState
     {
@@ -54,16 +41,20 @@
         Opposite
     }
 
-    public enum Job
+    public enum ItemId
     {
         None,
-        Priest,
-        Warrior
+        BasicAttack,
+        BasicHeal,
+        GreaterThan,
+        LesserThan,
+        FiftyPercent,
+        CurrentHealth
     }
 
-    public enum ActiveMenu
+    public enum CharacterArchetype
     {
-        None,
-        Inventory
+        GenericAlly,
+        GenericEnemy
     }
 }

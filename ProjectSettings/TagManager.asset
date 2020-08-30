@@ -38,12 +38,21 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: FloatingText
-    uniqueID: 3680779703
+  - name: Default
+    uniqueID: 0
     locked: 0
   - name: Character
     uniqueID: 2249136367
     locked: 0
-  - name: Default
-    uniqueID: 0
+  - name: FloatingText
+    uniqueID: 3680779703
+    locked: 0
+  - name: PopupPanel
+    uniqueID: 4065501859
+    locked: 0
+  - name: LowCharPanel
+    uniqueID: 4054276081
+    locked: 0
+  - name: DraggedObject
+    uniqueID: 2460311281
     locked: 0

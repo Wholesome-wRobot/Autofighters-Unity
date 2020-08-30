@@ -9,6 +9,7 @@ namespace AutoFighters
         public GameObject CharacterManagerPrefab;
         public GameObject EventSystemPrefab;
         public GameObject InventoryManagerPrefab;
+        public GameObject LowerCharPanelPrefab;
 
         [SerializeField] private IMenuPanel _currentActivePanel;
         public IMenuPanel CurrentActivePanel { get => _currentActivePanel; private set => _currentActivePanel = value; }
@@ -16,14 +17,14 @@ namespace AutoFighters
         [SerializeField] private CharacterManager _characterManager;
         public CharacterManager CharacterManager { get => _characterManager; private set => _characterManager = value; }
 
-        [SerializeField] private Inventory _inventory;
-        public Inventory InventoryManager { get => _inventory; private set => _inventory = value; }
+        [SerializeField] private Inventory _inventoryManager;
+        public Inventory InventoryManager { get => _inventoryManager; private set => _inventoryManager = value; }
+
+        [SerializeField] private LowerCharPanel _lowerCharPanel;
+        public LowerCharPanel LowerCharPanel { get => _lowerCharPanel; private set => _lowerCharPanel = value; }
 
         [SerializeField] private GameState _gameState;
         public GameState GameState { get => _gameState; private set => _gameState = value; }
-
-        //[SerializeField] private ulong _currentAvailableUniqueId;
-        //public ulong CurrentAvailableUniqueId { get => _currentAvailableUniqueId; private set => _currentAvailableUniqueId = value; }
 
         public static MainController CN { get; private set; }
 
@@ -47,7 +48,7 @@ namespace AutoFighters
         private void Awake()
         {
             // Random seed
-            UnityEngine.Random.InitState((int)DateTime.Now.Ticks);
+            UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
             if (CN != null)
                 Destroy(gameObject);
@@ -59,14 +60,15 @@ namespace AutoFighters
 
         void Start()
         {
-            GameState = GameState.MainMenu;
-
-            // Bindings
-            GameObject characterManagerPrefab = Instantiate(CharacterManagerPrefab);
-            CharacterManager = characterManagerPrefab.GetComponent<CharacterManager>();
-
+            // Bindings, Carfeul with the order
             GameObject inventoryManagerPrefab = Instantiate(InventoryManagerPrefab);
             InventoryManager = inventoryManagerPrefab.GetComponent<Inventory>();
+
+            GameObject lowerCharPanelPrefab = Instantiate(LowerCharPanelPrefab);
+            LowerCharPanel = lowerCharPanelPrefab.GetComponent<LowerCharPanel>();
+
+            GameObject characterManagerPrefab = Instantiate(CharacterManagerPrefab);
+            CharacterManager = characterManagerPrefab.GetComponent<CharacterManager>();
 
             Instantiate(EventSystemPrefab);
         }
@@ -84,8 +86,6 @@ namespace AutoFighters
                 CurrentActivePanel = panel;
             }
         }
-
-        //public void SetCurrentAvailableUniqueId(ulong id) { CurrentAvailableUniqueId = id; }
 
         public void SetGameState(GameState gameState) 
         {
@@ -108,18 +108,11 @@ namespace AutoFighters
             SceneManager.LoadScene(levelToLoad);
         }
 
-        /*public ulong GenerateUniqueID()
+        public void LoadController(SerializedMainController data)
         {
-            CurrentAvailableUniqueId += 1;
-            return CurrentAvailableUniqueId;
-        }*/
-
-        public void LoadController(MainControllerData data)
-        {
-            SetGameState(data.gameState);
-            //CurrentAvailableUniqueId = data.currentAvailableUniqueId;
-            CharacterManager.SetCharactersList(data.characterList);
-            InventoryManager.LoadInventory(data.inventory);
+            SetGameState(data.GameState);
+            CharacterManager.LoadCharacterListFromSave(data.SerializedCharacterList);
+            InventoryManager.LoadInventory(data.SerializedInventory);
             SetActiveMenu(null);
         }
     }

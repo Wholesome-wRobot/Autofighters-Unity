@@ -1,16 +1,17 @@
 ﻿using System;
+using UnityEngine;
 
 namespace AutoFighters
 {
     [Serializable]
-    public class FiftyPercent : Item, IRune
+    [CreateAssetMenu(fileName = "Fifty Percent Rune", menuName = "Runes/Fifty Percent Rune")]
+    public class FiftyPercent : Rune
     {
-        public RuneId RuneId => RuneId.FiftyPercent;
-        public RuneType RuneType => RuneType.PercentValue;
-
-        public FiftyPercent()
+        public new void OnEnable()
         {
-            DisplayName = "50% Rune";
+            base.OnEnable();
+            DisplayName = "Fifty Percent Rune";
+            ItemId = ItemId.FiftyPercent;
         }
     }
 }

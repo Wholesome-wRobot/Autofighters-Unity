@@ -12,7 +12,7 @@ namespace AutoFighters
         Neutral
     }
 
-    class FloatingText : MonoBehaviour
+    public class FloatingText : MonoBehaviour
     {
         public string Text { get; private set; }
         public FloatingTextType Type { get; private set; }

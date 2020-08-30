@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.PackageManager;
+using UnityEngine;
 
 namespace AutoFighters
 {
@@ -14,5 +15,18 @@ namespace AutoFighters
 
         // Folders
         public static string PersistentDataPath { get => Application.persistentDataPath; }
+
+        // Game parameters
+        public static int NbOfSpellsPerCharacter { get => 4; }
+        public static int MaxNumberOfAllies { get => 4; }
+        public static int MaxNumberOfEnemies { get => 4; }
+    }
+
+    static class ColorConsts
+    {
+        public static Color32 White { get => new Color32(255, 255, 255, 255); }
+        public static Color32 SlotColorOnHover { get => new Color32(200, 200, 255, 255); }
+        public static Color SlotColorRed { get => new Color32(255, 0, 0, 200); }
+        public static Color32 TransparentOnDrag { get => new Color32(255, 255, 255, 170); }
     }
 }

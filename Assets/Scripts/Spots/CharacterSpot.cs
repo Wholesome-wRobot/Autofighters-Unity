@@ -12,8 +12,8 @@ namespace AutoFighters
         [SerializeField]  private int _spotId;
         public int SpotId { get => _spotId; private set => _spotId = value; }
 
-        [SerializeField] private ulong _occupiedBy;
-        public ulong OccupiedBy { get => _occupiedBy; private set => _occupiedBy = value; }
+        [SerializeField] private bool _occupied;
+        public bool Occupied { get => _occupied; private set => _occupied = value; }
 
 
         void Awake()
@@ -22,15 +22,16 @@ namespace AutoFighters
             sr.sprite = null;
         }
 
-        public void AttachCharacter(CharacterStats characterStats)
+        public CharacterSpot AttachCharacter(Character character)
         {
-            SpotFaction = characterStats.Faction;
-            OccupiedBy = characterStats.UniqueId;
+            SpotFaction = character.Stats.Faction;
+            Occupied = true;
+            return this;
         }
 
         public void DetachCharacter()
         {
-            OccupiedBy = 0;
+            Occupied = false;
         }
 
         public static CharacterSpot GetFirstAvailableSpot(Faction faction)
@@ -39,7 +40,7 @@ namespace AutoFighters
 
             foreach (CharacterSpot spot in allSpots)
             {
-                if (spot.SpotFaction == faction && spot.OccupiedBy == 0)
+                if (spot.SpotFaction == faction && !spot.Occupied)
                     return spot;
             }
             return null;

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Linq;
 
 namespace AutoFighters
 {
@@ -12,7 +11,8 @@ namespace AutoFighters
         private TextMeshProUGUI _displayState;
         private TextMeshProUGUI _energyText;
 
-        private CharacterSpot _mySpot;
+        public CharacterSpot mySpot;
+        public FloatingText floatingTextPrefab;
 
         private Image _energyBar;
         private Image _manaBar;
@@ -40,13 +40,9 @@ namespace AutoFighters
 
         void Start()
         {
-            /*
-            EquipSpell(new BasicHeal(), 3);
-            EquipSpell(new BasicAttack(), 1);*/
-
-            _mySpot = FindObjectsOfType<CharacterSpot>().ToList().Find(s => s.OccupiedBy == Stats.UniqueId);
-
             _nameplate.SetText(Stats.DisplayName);
+
+            Anim.runtimeAnimatorController = Stats.AnimatorController;
 
             // Flip if enemy
             if (Stats.Faction == Faction.Enemy)
@@ -79,23 +75,16 @@ namespace AutoFighters
             }
         }
 
-        public void LoadStats(CharacterStats stats)
+        public void AttachStats(CharacterStats stats)
         {
             Stats = stats;
         }
 
         public void DestroyInstance()
         {
-            Debug.Log("Detaching " + Stats.DisplayName);
-            _mySpot.DetachCharacter();
-            MainController.Instance.CharacterManager.RemoveFromList(Stats);
+            Debug.Log("Destroying " + Stats.DisplayName);
+            mySpot.DetachCharacter();
             Destroy(gameObject);
-        }
-
-        public void EquipSpell(ISpell spell, int slot)
-        {
-            Debug.Log($"{Stats.DisplayName} equipped {spell.DisplayName} in slot {slot}");
-            Stats.SpellSlots[slot] = spell;
         }
 
         public void ReceiveDamage(int amount)
@@ -123,7 +112,7 @@ namespace AutoFighters
 
         public void SpawnFloatingText(string text, FloatingTextType type)
         {
-            FloatingText textInstance = Instantiate(Resources.Load<FloatingText>("Prefabs/FloatingText"));
+            FloatingText textInstance = Instantiate(floatingTextPrefab);
 
             textInstance.GetComponent<FloatingText>().SetText(text);
             textInstance.GetComponent<FloatingText>().SetType(type);

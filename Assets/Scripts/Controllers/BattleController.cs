@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace AutoFighters
@@ -13,6 +12,7 @@ namespace AutoFighters
 
         public GameObject SpotsLayout;
         public GameObject BattleGUI;
+        public GameObject CharacterPrefab;
 
         public static BattleController Instance
         {
@@ -52,10 +52,10 @@ namespace AutoFighters
         public void SetBattleState(BattleState battleState) { BattleState = battleState; }
         public void SetCurrentFrame(ulong frame) { CurrentFrame = frame; }
 
-        public void LoadController(BattleControllerData data)
+        public void LoadController(SerializedBattleController data)
         {
-            SetBattleState(data.battleState);
-            SetCurrentFrame(data.currentFrame);
+            SetBattleState(data.BattleState);
+            SetCurrentFrame(data.CurrentFrame);
 
             // Destroy current characters in combat
             foreach (Character character in FindObjectsOfType<Character>().ToList())
@@ -83,16 +83,7 @@ namespace AutoFighters
 
         public void InstantiateCharacter(CharacterStats characterStats)
         {
-            // Create array of already instantiated characters
-            List<Character> charsAlreadyInstantiated = FindObjectsOfType<Character>().ToList();
-
-            // Check for duplicate
-            if (charsAlreadyInstantiated.Any(c => c.Stats.UniqueId == characterStats.UniqueId))
-            {
-                Debug.LogWarning($"Character with unique id {characterStats.UniqueId} already exists. Skipping.");
-                return;
-            }
-
+            Debug.Log($"Instantiating {characterStats.DisplayName}");
             // Find spot
             CharacterSpot firstSpotAvailable = CharacterSpot.GetFirstAvailableSpot(characterStats.Faction);
 
@@ -102,11 +93,11 @@ namespace AutoFighters
                 return;
             }
 
-            Character characterInstance = Instantiate(Resources.Load<Character>("Prefabs/Character"), firstSpotAvailable.transform.position, Quaternion.identity);
+            GameObject characterInstance = Instantiate(CharacterPrefab, firstSpotAvailable.transform.position, Quaternion.identity);
 
-            characterInstance.GetComponent<Character>().LoadStats(characterStats);
-
-            firstSpotAvailable.GetComponent<CharacterSpot>().AttachCharacter(characterStats);
+            Character characterScript = characterInstance.GetComponent<Character>();
+            characterScript.AttachStats(characterStats);
+            characterScript.mySpot = firstSpotAvailable.GetComponent<CharacterSpot>().AttachCharacter(characterScript);
         }
     }
 }

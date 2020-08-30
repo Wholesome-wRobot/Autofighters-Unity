@@ -1,16 +1,17 @@
 ﻿using System;
+using UnityEngine;
 
 namespace AutoFighters
 {
     [Serializable]
-    public class LesserThan : Item, IRune
+    [CreateAssetMenu(fileName = "Lesser Than Rune", menuName = "Runes/Lesser Than Rune")]
+    public class LesserThan : Rune
     {
-        public RuneId RuneId => RuneId.LesserThan;
-        public RuneType RuneType => RuneType.Comparator;
-
-        public LesserThan()
+        public new void OnEnable()
         {
+            base.OnEnable();
             DisplayName = "Lesser Than Rune";
+            ItemId = ItemId.LesserThan;
         }
     }
 }

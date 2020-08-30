@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4804739912689351185}
   - component: {fileID: 4804739912689351184}
+  - component: {fileID: 1324354799970077686}
   m_Layer: 0
   m_Name: MainController
   m_TagString: Untagged
@@ -49,8 +50,23 @@ MonoBehaviour:
     type: 3}
   InventoryManagerPrefab: {fileID: 9142536902121939265, guid: 8fbfc973d8dd41645b6cbab20dca53a9,
     type: 3}
+  LowerCharPanelPrefab: {fileID: 5355946081131095103, guid: 04d6e04d652d858478c5d53a0b8d9da2,
+    type: 3}
   _characterManager: {fileID: 0}
-  _inventory: {fileID: 0}
-  _currentActiveMenu: 0
+  _inventoryManager: {fileID: 0}
+  _lowerCharPanel: {fileID: 0}
   _gameState: 0
-  _currentAvailableUniqueId: 0
+--- !u!114 &1324354799970077686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4804739912689351187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2346dbe2e2319749a02b0b3fb855953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemDB: {fileID: 11400000, guid: 8d971555c64396446a744e96dc9f31b9, type: 2}
+  _statsDB: {fileID: 11400000, guid: ad7387570e92bba41b3d85676f1902e8, type: 2}

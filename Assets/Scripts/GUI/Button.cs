@@ -14,29 +14,28 @@ namespace AutoFighters
 
         public void SaveAll()
         {
-            // Save Main controller
-            MainControllerData dataMainC = new MainControllerData(MainController.Instance);
+            SerializedMainController dataMainC = new SerializedMainController(MainController.Instance);
             SaveSystem.SaveController(dataMainC, Consts.MainControllerName);
 
-            // Save Battle controller
-            BattleControllerData dataBattleC = new BattleControllerData(BattleController.Instance);
+            SerializedBattleController dataBattleC = new SerializedBattleController(BattleController.Instance);
             SaveSystem.SaveController(dataBattleC, Consts.BattleControllerName);
         }
 
         public void LoadAll()
         {
-            MainController.Instance.LoadController((MainControllerData)SaveSystem.GetControllerDataFromFile(Consts.MainControllerName));
-            BattleController.Instance.LoadController((BattleControllerData)SaveSystem.GetControllerDataFromFile(Consts.BattleControllerName));
+            object serializedMainCOntroller = SaveSystem.GetControllerDataFromFile(Consts.MainControllerName);
+            MainController.Instance.LoadController(serializedMainCOntroller as SerializedMainController);
+
+            object serializedBattleController = SaveSystem.GetControllerDataFromFile(Consts.BattleControllerName);
+            BattleController.Instance.LoadController(serializedBattleController as SerializedBattleController);
         }
 
-        public void CreateChar(int factionId)
+        public void GenerateChar(int archetype)
         {
-            CharacterStats newCharStats = new CharacterStats();
-            newCharStats.SetFaction((Faction)factionId);
-            //newCharStats.SetUniqueId(MainController.Instance.GenerateUniqueID());
-            newCharStats.SetDisplayName($"{newCharStats.Faction} ({newCharStats.UniqueId})");
-            MainController.Instance.CharacterManager.AddCharacterToList(newCharStats);
-            BattleController.Instance.InstantiateCharacter(newCharStats);
+            CharacterStats stats = new CharacterStats((CharacterArchetype)archetype);
+            MainController.Instance.CharacterManager.AddCharacterToList(stats);
+            if (MainController.Instance.GameState == GameState.Battle)
+                BattleController.Instance.InstantiateCharacter(stats);
         }
 
         public void StartGame()
