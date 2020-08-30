@@ -3,8 +3,6 @@ using UnityEngine;
 
 namespace AutoFighters
 {
-    [Serializable]
-    [CreateAssetMenu(fileName = "Item", menuName = "Item")]
     public abstract class Item : ScriptableObject
     {
         [SerializeField] private Sprite _icon;

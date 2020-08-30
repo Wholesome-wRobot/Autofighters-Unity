@@ -55,15 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Items\Runes\AllRunes\Comparator\LesserThan.cs" />
      <Compile Include="Assets\ScriptableObjects\Character\SO_CharacterStats.cs" />
      <Compile Include="Assets\Scripts\GUI\LowCharPanel\IndividualLowPanel.cs" />
      <Compile Include="Assets\Scripts\Characters\StateMachine\CombatStates\SelectSpellState.cs" />
      <Compile Include="Assets\Scripts\GUI\Tooltip.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
      <Compile Include="Assets\Scripts\GUI\IItemSlot.cs" />
-     <Compile Include="Assets\Scripts\Items\Runes\AllRunes\Percentage\FiftyPercent.cs" />
-     <Compile Include="Assets\Scripts\Items\Runes\AllRunes\Comparator\GreaterThan.cs" />
      <Compile Include="Assets\Scripts\Characters\StateMachine\CharacterStateMachine.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Scripts\GUI\DragAndDropHandler.cs" />
@@ -78,11 +75,9 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
      <Compile Include="Assets\Scripts\Controllers\EventSystem.cs" />
-     <Compile Include="Assets\Scripts\Items\Spells\AllSpells\BasicHeal.cs" />
      <Compile Include="Assets\Scripts\GUI\BattleGUI.cs" />
      <Compile Include="Assets\Scripts\SaveSystem\Serialization\SerializedBattleController.cs" />
      <Compile Include="Assets\Scripts\Controllers\MainController.cs" />
-     <Compile Include="Assets\Scripts\Items\Runes\AllRunes\Value\CurrentHealth.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\GUI\PopupMenus\Inventory\Inventory.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
@@ -97,7 +92,6 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
      <Compile Include="Assets\Scripts\GUI\PopupMenus\IMenuPanel.cs" />
      <Compile Include="Assets\Scripts\GUI\LowCharPanel\LowPanelSpellSlot.cs" />
-     <Compile Include="Assets\Scripts\Items\Spells\AllSpells\BasicAttack.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
